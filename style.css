@@ -109,4 +109,33 @@ body {
     font-size: 0.9rem;
     color: #888;
   }
-  
+
+  .paypal-box {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .paypal-box h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+
+  .paypal-box p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+  }
+
+  .about-content, .bio, .text-block {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px; /* optional side padding for smaller screens */
+    line-height: 1.6;
+  }
+
