@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Into Dreamlands - Koree Arndt Music</title>
   <link rel="stylesheet" href="../style.css" />
+  <script 
+  src="https://www.paypal.com/sdk/js?client-id=BAAdn_AoVt92YcLCIy7ZjM23J_MlOnIKOGNub-q4R0399Lp7WPT04hrHmI1hweAQJppZi7JO-0QvxWVcNo&components=hosted-buttons&enable-funding=venmo&currency=USD">
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -28,13 +31,15 @@
     <p> "Into Dreamlands" is an ethereal and immersive piece that transports listeners into a vivid dreamscape. Through its haunting melodies and atmospheric textures, it captures the struggle and determination of fighting for your dreams and ambitions amid a surreal, otherworldly realm.</p>
     
     <p>It is geared towards high-intermediate to advanced players- expect to play with very wide intervals and explore many rapid double lateral techniques.</p>
-
-    <p><strong>Price: $14.99</strong></p>
   
     <!-- PayPal Button here -->
     <div>
-      <!-- This will be your PayPal generated code -->
-      [PASTE THE PAYPAL BUTTON HTML HERE]
+      <div id="paypal-container-H97X52WNR2TH6"></div>
+      <script>
+        paypal.HostedButtons({
+          hostedButtonId: "H97X52WNR2TH6",
+        }).render("#paypal-container-H97X52WNR2TH6")
+      </script>
     </div>
   </div>  
 
