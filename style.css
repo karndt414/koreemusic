@@ -139,3 +139,14 @@ body {
     line-height: 1.6;
   }
 
+    .youtube-link a {
+    font-size: 1.1rem;
+    transition: color 0.3s;
+  }
+
+  .youtube-link a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+  }
+
+
