@@ -150,3 +150,77 @@ body {
   }
 
 
+    .youtube-link a {
+    font-size: 1.1rem;
+    transition: color 0.3s;
+  }
+
+  .youtube-link a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+  }
+
+  /* Overlay container to hold left and right clouds */
+  #cloud-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: visible;
+    opacity: 0;
+    transition: opacity 2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .cloud-panel {
+    position: fixed;
+    width: 50vw;
+    height: 40vh;
+    background: url('images/dark-clouds.png') repeat-x;
+    background-size: cover;
+    opacity: 0.85;
+    /* Start off-screen */
+    transform: translateX(0);
+    transition: transform 6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Positions before animation */
+  #cloud-left-top {
+    top: 5vh;
+    left: -40vw;
+    /* off screen left */
+  }
+
+  #cloud-left-bottom {
+    bottom: 5vh;
+    left: -50vw;
+    /* off screen left */
+  }
+
+  #cloud-right-middle {
+    top: 30vh;
+    right: -40vw;
+    /* off screen right */
+  }
+
+  /* When active, slide clouds in */
+  #cloud-overlay.active {
+    opacity: 1;
+  }
+
+  #cloud-overlay.active #cloud-left-top {
+    transform: translateX(45vw);
+    transition-delay: 0.2s;
+  }
+
+  #cloud-overlay.active #cloud-left-bottom {
+    transform: translateX(50vw);
+    transition-delay: 0.5s;
+  }
+
+  #cloud-overlay.active #cloud-right-middle {
+    transform: translateX(-45vw);
+    transition-delay: 0.35s;
+  }
