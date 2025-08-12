@@ -8,7 +8,6 @@
   <link rel="icon" href="images/white-logo.jpg" type="image/png">
 
   <!--Sharing details-->
-  <!-- Open Graph for social sharing -->
   <meta property="og:title" content="Koree Arndt Music" />
   <meta property="og:description" content="Explore and purchase original sheet music by Koree Arndt." />
   <meta property="og:image" content="https://koreemarimba.com/images/white-logo.jpg" />
@@ -17,23 +16,70 @@
 
   <title>Purchase - Koree Arndt Music</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Cloud base styling */
+    .into-dreamlands {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    .cloud-left, .cloud-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 150%;
+      background: url('images/dark-clouds.png') repeat-x;
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .cloud-left {
+      left: -150%;
+    }
+
+    .cloud-right {
+      right: -150%;
+    }
+
+    /* Animation trigger */
+    .cloud-left.animate {
+      animation: rollInLeft 4s ease-out forwards;
+    }
+
+    .cloud-right.animate {
+      animation: rollInRight 4s ease-out forwards;
+    }
+
+    /* Keyframes */
+    @keyframes rollInLeft {
+      0%   { left: -150%; opacity: 0; }
+      100% { left: 0; opacity: 1; }
+    }
+
+    @keyframes rollInRight {
+      0%   { right: -150%; opacity: 0; }
+      100% { right: 0; opacity: 1; }
+    }
+  </style>
 </head>
 
 <body>
-    <!-- Header with logo/photo and site name -->
-    <header class="site-header">
-      <img src="images/logo.png" alt="Koree Arndt Logo" class="header-logo" />
-      <h1>Koree Arndt Music</h1>
-    </header>
-  
-    <!-- Navigation -->
-    <div class="nav">
-      <a href="index.html">Home</a> | 
-      <a href="about.html">About</a> | 
-      <a href="purchase.html" class="active">Sheet Music</a> | 
-      <a href="contact.html">Contact</a>
-    </div>
-  
+  <!-- Header -->
+  <header class="site-header">
+    <img src="images/logo.png" alt="Koree Arndt Logo" class="header-logo" />
+    <h1>Koree Arndt Music</h1>
+  </header>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="index.html">Home</a> | 
+    <a href="about.html">About</a> | 
+    <a href="purchase.html" class="active">Sheet Music</a> | 
+    <a href="contact.html">Contact</a>
+  </div>
 
   <!-- Purchase content -->
   <div class="about-content">
@@ -43,20 +89,45 @@
     <div class="song-preview" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
       <h2><a href="songs/intoDreamlands.html">Into Dreamlands</a></h2>
       
-      <a href="songs/intoDreamlands.html">
-        <img src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover" 
+      <div class="into-dreamlands">
+        <a href="songs/intoDreamlands.html">
+          <img src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover" 
             style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" />
-      </a>
+        </a>
+        <div class="cloud-left"></div>
+        <div class="cloud-right"></div>
+      </div>
       
       <p style="margin-top: 15px; font-size: 1rem; color: #333;">Difficulty: Advanced</p>
       <p>Duration: 6 minutes</p>
       <p>Price: $14.99 USD</p>
       <p>5 Octave Marimba</p>
     </div>
-
   </div>
 
   <footer>© 2025 Koree Arndt - All rights reserved.</footer>
+
+  <!-- Cloud animation script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const target = document.querySelector(".into-dreamlands");
+      const leftCloud = target.querySelector(".cloud-left");
+      const rightCloud = target.querySelector(".cloud-right");
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            leftCloud.classList.add("animate");
+            rightCloud.classList.add("animate");
+          } else {
+            leftCloud.classList.remove("animate");
+            rightCloud.classList.remove("animate");
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(target);
+    });
+  </script>
 </body>
 </html>
-
