@@ -160,7 +160,6 @@ body {
     text-decoration: underline;
   }
 
-  /* Overlay container to hold left and right clouds */
   #cloud-overlay {
     position: fixed;
     top: 0;
@@ -171,7 +170,7 @@ body {
     z-index: 9999;
     overflow: visible;
     opacity: 0;
-    transition: opacity 2s cubic-bezier(.4,0,.2,1);
+    transition: opacity 2s cubic-bezier(.4, 0, .2, 1);
   }
 
   .cloud-panel {
@@ -223,4 +222,48 @@ body {
   #cloud-overlay.active #cloud-right-middle {
     transform: translateX(-45vw);
     transition-delay: 0.35s;
+  }
+
+  /* MOBILE-FRIENDLY ADJUSTMENTS */
+  @media (max-width: 600px) {
+    #cloud-overlay {
+      /* keep full viewport */
+      overflow-x: visible;
+    }
+
+    .cloud-panel {
+      width: 80vw;
+      /* wider but smaller height */
+      height: 25vh;
+      opacity: 0.6;
+      background-size: contain;
+    }
+
+    #cloud-left-top {
+      top: 10vh;
+      left: -80vw;
+      /* further off-screen */
+    }
+
+    #cloud-left-bottom {
+      bottom: 10vh;
+      left: -90vw;
+    }
+
+    #cloud-right-middle {
+      top: 40vh;
+      right: -80vw;
+    }
+
+    #cloud-overlay.active #cloud-left-top {
+      transform: translateX(70vw);
+    }
+
+    #cloud-overlay.active #cloud-left-bottom {
+      transform: translateX(75vw);
+    }
+
+    #cloud-overlay.active #cloud-right-middle {
+      transform: translateX(-70vw);
+    }
   }
