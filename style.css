@@ -13,23 +13,40 @@ body {
     box-sizing: border-box;
   }
 
-  .site-header {
-    display: flex;
-    flex-direction: column;   /* stack items vertically */
-    align-items: center;      /* center them horizontally */
-    margin: 0 auto 20px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-    width: 100%;
-    max-width: 900px;
-    justify-content: center;  /* centers items horizontally inside the header */
-  }
-  
-  
-  .header-logo {
-    width: 200px;  /* Adjust size as you like */
-    height: 200px;
-  }
+.site-header {
+  display: flex;
+  flex-direction: column;
+  /* stack logo on top of title row */
+  align-items: center;
+  margin: 0 auto 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.main-logo {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.title-row {
+  display: flex;
+  flex-direction: row;
+  /* title and YouTube icon side by side */
+  align-items: center;
+}
+
+.title-row h1 {
+  margin: 0;
+}
+
+.title-row a img {
+  width: 28px;
+  height: 28px;
+  margin-left: 10px;
+}
   
   
   .nav {
