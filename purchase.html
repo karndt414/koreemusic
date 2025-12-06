@@ -3,94 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <!--Tab bar icon-->
-  <link rel="icon" href="images/white-logo.jpg" type="image/png">
-
-  <!--Sharing details-->
-  <!-- Open Graph for social sharing -->
-  <meta property="og:title" content="Koree Arndt Music" />
-  <meta property="og:description" content="Explore and purchase original sheet music by Koree Arndt." />
-  <meta property="og:image" content="https://koreemarimba.com/images/white-logo.jpg" />
-  <meta property="og:url" content="https://koreemarimba.com" />
-  <meta property="og:type" content="website" />
-
   <title>Purchase - Koree Arndt Music</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <!-- Header with logo/photo and site name -->
-    <header class="site-header">
-      <img class="main-logo" src="images/logo.png" alt="Logo">
-      <div class="title-row">
-        <h1>Koree Arndt Music</h1>
-        <a href="https://www.youtube.com/@Koreearndt414/videos" target="_blank">
-          <img src="images/youtube.png" alt="YouTube">
-        </a>
-      </div>
-    </header>
 
-    <!-- Add this inside your <body>, right after header -->
-    
-    <div id="cloud-overlay" aria-hidden="true">
-      <div class="cloud-panel" id="cloud-left-top"></div>
-      <div class="cloud-panel" id="cloud-left-bottom"></div>
-      <div class="cloud-panel" id="cloud-right-middle"></div>
+  <header class="site-header">
+    <img class="main-logo" src="images/logo.png" alt="Logo">
+    <div class="title-row">
+      <h1>Koree Arndt Music</h1>
     </div>
+  </header>
 
-    <!-- Navigation -->
-    <div class="nav">
-      <a href="index.html">Home</a> | 
-      <a href="about.html">About</a> | 
-      <a href="purchase.html" class="active">Sheet Music</a> | 
-      <a href="contact.html">Contact</a>
-    </div>
-  
-
-  <!-- Purchase content -->
-  <div class="about-content">
-    <h1>Purchase Music: Solos</h1>
-    <p>You can directly support my work and purchase sheet music here- click the title or thumbnail of a piece for more details:</p>
-
-    <div class="song-preview" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
-      <h2><a href="songs/intoDreamlands.html">Into Dreamlands</a></h2>
-      
-      <div id="cover-art-wrapper" style="max-width: 600px; margin: auto; text-align: center;">
-        <a href="songs/intoDreamlands.html">
-          <img id="cover-art" src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover"
-            style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" />
-        </a>
-      </div>
-      
-      <p style="margin-top: 15px; font-size: 1rem; color: #333;">Difficulty: Advanced</p>
-      <p>Duration: 6 minutes</p>
-      <p>Price: $14.99 USD</p>
-      <p>5 Octave Marimba</p>
-    </div>
-
+  <div id="cloud-overlay" aria-hidden="true">
+    <div class="cloud-panel" id="cloud-left-top"></div>
+    <div class="cloud-panel" id="cloud-left-bottom"></div>
+    <div class="cloud-panel" id="cloud-right-middle"></div>
   </div>
 
-  <footer>© 2025 Koree Arndt - All rights reserved.</footer>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="purchase.html" class="active">Sheet Music</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  
+  <div class="container">
+      <main class="main-content">
+        <h1>Purchase Music: Solos</h1>
+        <p>You can directly support my work and purchase sheet music here.</p>
+
+        <div style="text-align:center; margin-bottom: 30px;">
+            <h2>Into Dreamlands</h2>
+            <a href="songs/intoDreamlands.html">
+                <img id="cover-art" src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover" style="max-width:300px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            </a>
+            <p><a href="songs/intoDreamlands.html" style="background:#333; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">View Details</a></p>
+        </div>
+
+        <h3>Catalog Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Instrument</th>
+                    <th>Difficulty</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Into Dreamlands</td>
+                    <td>5 Octave Marimba</td>
+                    <td>Advanced</td>
+                    <td>$14.99</td>
+                </tr>
+                <tr>
+                    <td>Upcoming Piece</td>
+                    <td>Vibraphone</td>
+                    <td>Intermediate</td>
+                    <td>TBA</td>
+                </tr>
+            </tbody>
+        </table>
+      </main>
+  </div>
+
+  <footer>
+    &copy; 2025 Koree Arndt - All rights reserved.
+  </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const cloudOverlay = document.getElementById('cloud-overlay');
       const coverArt = document.getElementById('cover-art');
 
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            cloudOverlay.classList.add('active');
-          } else {
-            cloudOverlay.classList.remove('active');
-          }
-        });
-      }, { threshold: 0.5 });
+      if(coverArt && cloudOverlay) {
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                cloudOverlay.classList.add('active');
+              } else {
+                cloudOverlay.classList.remove('active');
+              }
+            });
+          }, { threshold: 0.5 });
 
-      observer.observe(coverArt);
+          observer.observe(coverArt);
+      }
     });
   </script>
 </body>
 </html>
-

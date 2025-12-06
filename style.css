@@ -1,183 +1,153 @@
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    color: #111;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    text-align: center;
-    padding: 20px;
+/* --- RESET & BASICS --- */
+* {
     box-sizing: border-box;
-  }
-
-.site-header {
-  display: flex;
-  flex-direction: column;
-  /* stack logo on top of title row */
-  align-items: center;
-  margin: 0 auto 20px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
-  width: 100%;
-  max-width: 900px;
 }
 
-.main-logo {
-  max-width: 120px;
-  height: auto;
-  margin-bottom: 10px;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- HEADER --- */
+.site-header {
+    background: linear-gradient(to right, #4e4747, #ffffff); /* CSS3 Gradient */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* CSS3 Box Shadow */
+    position: relative; 
+    z-index: 10; /* Ensures header stays above clouds if they overlap */
 }
 
 .title-row {
-  display: flex;
-  flex-direction: row;
-  /* title and YouTube icon side by side */
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .title-row h1 {
-  margin: 0;
+    margin: 0;
+    text-shadow: 2px 2px 4px #000; /* CSS3 Text Shadow */
 }
 
-.title-row a img {
-  width: 28px;
-  height: 28px;
-  margin-left: 10px;
+.main-logo {
+    max-width: 100px;
+    margin-bottom: 10px;
+    border: 2px solid #fff;
 }
-  
-  
-  .nav {
-    margin-bottom: 20px;
-  }
-  
-  .nav a {
-    text-decoration: none;
-    color: #111;
-    font-weight: bold;
-    margin: 0 10px;
-    transition: color 0.3s;
-  }
-  
-  .nav a:hover {
-    color: #555;
-  }
 
-  .nav a.active {
-    color: rgb(117, 112, 112);
-    padding: 8px 15px;
-    border-radius: 5px;
-  }  
+/* --- NAVIGATION (HTML LIST) --- */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Mobile: Stack vertically */
+    align-items: center;
+    background-color: #ddd;
+    position: relative;
+    z-index: 10;
+}
 
-  a {
-    color: #0066cc;
-    text-decoration: underline;
-  }
-  
-  a:hover {
-    color: #003366;
-  }  
-  
-  .top-photo img {
-    max-width: 300px;
-    height: auto;
-    border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
-  }
-  
-  .bio {
-    max-width: 600px;
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-  }
-  
-  .cover img {
-    max-width: 90vw;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .title {
-    font-size: 2rem;
-    margin: 20px 0 10px 0;
-  }
-  
-  .buttons a {
-    text-decoration: none;
-    color: white;
-    background: black;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    transition: background 0.3s;
-  }
-  
-  .buttons a:hover {
-    background: #333;
-  }
-  
-  footer {
-    margin-top: 40px;
-    font-size: 0.9rem;
-    color: #888;
-  }
-
-  .paypal-box {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 25px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+nav ul li {
+    width: 100%;
     text-align: center;
-  }
+    border-bottom: 1px solid #ccc;
+}
 
-  .paypal-box h2 {
-    margin-top: 0;
-    font-size: 1.5rem;
-  }
+nav a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: background 0.3s;
+}
 
-  .paypal-box p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-  }
+nav a:hover, nav a.active {
+    background-color: #333;
+    color: #fff;
+}
 
-  .about-content, .bio, .text-block {
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px; /* optional side padding for smaller screens */
-    line-height: 1.6;
-  }
+/* --- LAYOUT CONTAINERS --- */
+.container {
+    display: flex;
+    flex-direction: column; /* Mobile: Column */
+    padding: 20px;
+    gap: 20px;
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 5; /* Ensure content is clickable */
+}
 
-    .youtube-link a {
-    font-size: 1.1rem;
-    transition: color 0.3s;
-  }
+.main-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 
-  .youtube-link a:hover {
-    color: #ff0000;
-    text-decoration: underline;
-  }
+.sidebar {
+    background: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
 
+/* --- IMAGES --- */
+img {
+    max-width: 100%;
+    height: auto;
+}
 
-    .youtube-link a {
-    font-size: 1.1rem;
-    transition: color 0.3s;
-  }
+/* --- TABLES (Rubric Requirement) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ddd;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+th {
+    background-color: #333;
+    color: white;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 
-  .youtube-link a:hover {
-    color: #ff0000;
-    text-decoration: underline;
-  }
+/* --- FOOTER --- */
+footer {
+    background-color: #222;
+    color: #bbb;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 10;
+}
 
-  #cloud-overlay {
+footer a {
+    color: #fff;
+}
+
+/* --- CLOUD ANIMATION STYLES (Restored) --- */
+#cloud-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -188,99 +158,47 @@ body {
     overflow: visible;
     opacity: 0;
     transition: opacity 2s cubic-bezier(.4, 0, .2, 1);
-  }
+}
 
-  .cloud-panel {
+.cloud-panel {
     position: fixed;
     width: 50vw;
     height: 40vh;
     background: url('images/dark-clouds.png') repeat-x;
     background-size: cover;
     opacity: 0.85;
-    /* Start off-screen */
     transform: translateX(0);
     transition: transform 6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+}
 
-  /* Positions before animation */
-  #cloud-left-top {
-    top: 5vh;
-    left: -40vw;
-    /* off screen left */
-  }
+/* Positions before animation */
+#cloud-left-top { top: 5vh; left: -40vw; }
+#cloud-left-bottom { bottom: 5vh; left: -50vw; }
+#cloud-right-middle { top: 30vh; right: -40vw; }
 
-  #cloud-left-bottom {
-    bottom: 5vh;
-    left: -50vw;
-    /* off screen left */
-  }
+/* Active State */
+#cloud-overlay.active { opacity: 1; }
+#cloud-overlay.active #cloud-left-top { transform: translateX(45vw); transition-delay: 0.2s; }
+#cloud-overlay.active #cloud-left-bottom { transform: translateX(50vw); transition-delay: 0.5s; }
+#cloud-overlay.active #cloud-right-middle { transform: translateX(-45vw); transition-delay: 0.35s; }
 
-  #cloud-right-middle {
-    top: 30vh;
-    right: -40vw;
-    /* off screen right */
-  }
-
-  /* When active, slide clouds in */
-  #cloud-overlay.active {
-    opacity: 1;
-  }
-
-  #cloud-overlay.active #cloud-left-top {
-    transform: translateX(45vw);
-    transition-delay: 0.2s;
-  }
-
-  #cloud-overlay.active #cloud-left-bottom {
-    transform: translateX(50vw);
-    transition-delay: 0.5s;
-  }
-
-  #cloud-overlay.active #cloud-right-middle {
-    transform: translateX(-45vw);
-    transition-delay: 0.35s;
-  }
-
-  /* MOBILE-FRIENDLY ADJUSTMENTS */
-  @media (max-width: 600px) {
-    #cloud-overlay {
-      /* keep full viewport */
-      overflow-x: visible;
+/* --- RESPONSIVE DESIGN (Desktop) --- */
+@media (min-width: 768px) {
+    nav ul {
+        flex-direction: row;
+        justify-content: center;
     }
-
-    .cloud-panel {
-      width: 80vw;
-      /* wider but smaller height */
-      height: 25vh;
-      opacity: 0.6;
-      background-size: contain;
+    nav ul li {
+        width: auto;
+        border: none;
     }
-
-    #cloud-left-top {
-      top: 10vh;
-      left: -80vw;
-      /* further off-screen */
+    .container {
+        flex-direction: row; 
     }
-
-    #cloud-left-bottom {
-      bottom: 10vh;
-      left: -90vw;
+    .main-content {
+        flex: 3; 
     }
-
-    #cloud-right-middle {
-      top: 40vh;
-      right: -80vw;
+    .sidebar {
+        flex: 1; 
     }
-
-    #cloud-overlay.active #cloud-left-top {
-      transform: translateX(70vw);
-    }
-
-    #cloud-overlay.active #cloud-left-bottom {
-      transform: translateX(75vw);
-    }
-
-    #cloud-overlay.active #cloud-right-middle {
-      transform: translateX(-70vw);
-    }
-  }
+}
