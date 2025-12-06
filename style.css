@@ -202,3 +202,47 @@ footer a {
         flex: 1; 
     }
 }
+
+/* --- CLOUD ANIMATION: MOBILE ADJUSTMENTS --- */
+/* This fixes the clouds on small screens */
+@media (max-width: 600px) {
+    #cloud-overlay {
+        overflow-x: visible;
+    }
+
+    .cloud-panel {
+        width: 80vw; /* Make clouds wider on mobile */
+        height: 25vh; /* But shorter so they don't cover text */
+        opacity: 0.6; /* Slightly more transparent */
+        background-size: contain;
+    }
+
+    /* Adjust start positions for mobile */
+    #cloud-left-top {
+        top: 10vh;
+        left: -80vw;
+    }
+
+    #cloud-left-bottom {
+        bottom: 10vh;
+        left: -90vw;
+    }
+
+    #cloud-right-middle {
+        top: 40vh;
+        right: -80vw;
+    }
+
+    /* Adjust end positions (Active State) for mobile */
+    #cloud-overlay.active #cloud-left-top {
+        transform: translateX(70vw);
+    }
+
+    #cloud-overlay.active #cloud-left-bottom {
+        transform: translateX(75vw);
+    }
+
+    #cloud-overlay.active #cloud-right-middle {
+        transform: translateX(-70vw);
+    }
+}
