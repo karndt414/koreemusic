@@ -15,6 +15,12 @@
     </div>
   </header>
 
+  <div id="cloud-overlay" aria-hidden="true">
+    <div class="cloud-panel" id="cloud-left-top"></div>
+    <div class="cloud-panel" id="cloud-left-bottom"></div>
+    <div class="cloud-panel" id="cloud-right-middle"></div>
+  </div>
+
   <nav>
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -33,7 +39,7 @@
         <div style="text-align:center; margin-bottom: 30px;">
             <h2>Into Dreamlands</h2>
             <a href="songs/intoDreamlands.html">
-                <img src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover" style="max-width:300px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                <img id="cover-art" src="images/Into_Dreamlands.png" alt="Into Dreamlands Album Cover" style="max-width:300px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
             </a>
             <p><a href="songs/intoDreamlands.html" style="background:#333; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">View Details</a></p>
         </div>
@@ -69,5 +75,26 @@
   <footer>
     &copy; 2025 Koree Arndt - All rights reserved.
   </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const cloudOverlay = document.getElementById('cloud-overlay');
+      const coverArt = document.getElementById('cover-art');
+
+      if(coverArt && cloudOverlay) {
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                cloudOverlay.classList.add('active');
+              } else {
+                cloudOverlay.classList.remove('active');
+              }
+            });
+          }, { threshold: 0.5 });
+
+          observer.observe(coverArt);
+      }
+    });
+  </script>
 </body>
 </html>
