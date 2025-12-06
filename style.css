@@ -15,7 +15,7 @@ body {
 
 /* --- HEADER --- */
 .site-header {
-    background: linear-gradient(to right, #000000, #434343); /* CSS3 Gradient */
+    background: linear-gradient(to right, #4e4747, #ffffff); /* CSS3 Gradient */
     color: white;
     padding: 20px;
     text-align: center;
@@ -38,7 +38,6 @@ body {
 
 .main-logo {
     max-width: 100px;
-    border-radius: 50%;
     margin-bottom: 10px;
     border: 2px solid #fff;
 }
