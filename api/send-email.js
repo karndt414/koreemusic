@@ -14,19 +14,30 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Get credentials from environment
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPassword = process.env.GMAIL_APP_PASSWORD;
+
+    if (!gmailUser || !gmailPassword) {
+      return res.status(500).json({ 
+        error: 'Missing Gmail configuration', 
+        details: 'GMAIL_USER or GMAIL_APP_PASSWORD not set' 
+      });
+    }
+
     // Create transporter with Gmail app password
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: gmailUser,
+        pass: gmailPassword.replace(/\s/g, ''), // Remove any spaces
       },
     });
 
     // Send email
     await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER, // Send to your email
+      from: gmailUser,
+      to: gmailUser, // Send to your email
       replyTo: email, // Allow replies to the sender
       subject: `New Contact Form Submission from ${name}`,
       html: `
