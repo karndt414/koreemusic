@@ -3,8 +3,20 @@
   "outputDirectory": ".",
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/pages/index.html"
+    },
+    {
+      "source": "/:path((?!api/).)*",
+      "destination": "/pages/:path.html"
+    },
+    {
       "source": "/api/:path*",
       "destination": "/api/:path*"
+    },
+    {
+      "source": "/songs/:path*",
+      "destination": "/songs/:path*"
     }
   ],
   "headers": [
