@@ -37,7 +37,7 @@
 
       <hr>
 
-      <form action="#" method="post">
+      <form id="contactForm">
         <p>
             <label for="name">Name:</label><br>
             <input type="text" id="name" name="name" style="width:100%; padding:8px;" required>
@@ -51,7 +51,54 @@
             <textarea id="message" name="message" rows="5" style="width:100%; padding:8px;" required></textarea>
         </p>
         <button type="submit" style="background:#333; color:#fff; border:none; padding:10px 20px; cursor:pointer;">Send Message</button>
+        <p id="statusMessage" style="margin-top:10px; display:none;"></p>
       </form>
+
+      <script>
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const statusMessage = document.getElementById('statusMessage');
+          const submitButton = e.target.querySelector('button[type="submit"]');
+          
+          // Show loading state
+          statusMessage.style.display = 'block';
+          statusMessage.style.color = '#666';
+          statusMessage.textContent = 'Sending your message...';
+          submitButton.disabled = true;
+          
+          try {
+            const response = await fetch('/api/send-email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value,
+              }),
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+              statusMessage.style.color = '#28a745';
+              statusMessage.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+              document.getElementById('contactForm').reset();
+            } else {
+              statusMessage.style.color = '#dc3545';
+              statusMessage.textContent = '✗ Failed to send message. Please try again or email me directly.';
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            statusMessage.style.color = '#dc3545';
+            statusMessage.textContent = '✗ An error occurred. Please try again or email me directly.';
+          } finally {
+            submitButton.disabled = false;
+          }
+        });
+      </script>
     </main>
   </div>
 
