@@ -55,19 +55,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build conversation context
-    const historyText = conversationHistory
-      .slice(-4)
-      .map((msg: { role: string; content: string }) => `${msg.role === 'user' ? 'User' : 'Melos'}: ${msg.content}`)
-      .join('\n\n');
-
+    // Build minimal context - only system prompt + current message
+    // This reduces token usage and API calls, helping avoid rate limits
     const fullMessage = `${MELOS_SYSTEM_PROMPT}
 
-${historyText ? 'Previous conversation:\n' + historyText + '\n\n' : ''}Current user message: ${message}`;
+User message: ${message}`;
 
     // Use the REST API directly
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
