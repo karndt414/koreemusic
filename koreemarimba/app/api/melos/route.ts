@@ -33,7 +33,7 @@ Always be:
 - Honest about pros and cons
 - Supportive of young artists' dreams
 
-Keep responses conversational and friendly. Use music-related emojis when appropriate. If asked about something outside your expertise, politely redirect to music industry topics.`;
+Keep responses conversational and friendly. Don't use emojis. If asked about something outside your expertise, politely redirect to music industry topics.`;
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,7 +67,7 @@ ${historyText ? 'Previous conversation:\n' + historyText + '\n\n' : ''}Current u
 
     // Use the REST API directly
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
