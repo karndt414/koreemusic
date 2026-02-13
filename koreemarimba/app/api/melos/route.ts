@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
 const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on:
 
 1. **Music Distributors & Platforms:**
@@ -49,36 +47,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error('GEMINI_API_KEY not found in environment');
       return NextResponse.json(
-        { error: 'API key not configured' },
+        { error: 'API key not configured. Please set GEMINI_API_KEY in .env.local' },
         { status: 500 }
       );
     }
 
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    // Build conversation history for context
-    const conversationContext = conversationHistory
-      .map((msg: { role: string; content: string }) => {
-        const role = msg.role === 'user' ? 'user' : 'model';
-        return { role, parts: [{ text: msg.content }] };
-      })
-      .slice(-8); // Keep last 8 messages for context
+    // Build the full message with system prompt and history
+    const historyText = conversationHistory
+      .slice(-4) // Last 4 messages for context
+      .map((msg: { role: string; content: string }) => `${msg.role === 'user' ? 'User' : 'Melos'}: ${msg.content}`)
+      .join('\n\n');
 
-    const chat = model.startChat({
-      history: conversationContext,
-      systemInstruction: MELOS_SYSTEM_PROMPT,
-    });
+    const fullMessage = `${MELOS_SYSTEM_PROMPT}
 
-    const response = await chat.sendMessage(message);
+${historyText ? 'Previous conversation:\n' + historyText + '\n\n' : ''}Current user message: ${message}`;
+
+    const response = await model.generateContent(fullMessage);
     const reply = response.response.text();
 
+    if (!reply) {
+      throw new Error('Empty response from Gemini API');
+    }
+
     return NextResponse.json({ reply });
-  } catch (error) {
-    console.error('Melos API error:', error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Melos API error:', errorMessage);
+    
     return NextResponse.json(
-      { error: 'Failed to get response from Melos' },
+      { 
+        error: 'Failed to get response from Melos: ' + errorMessage
+      },
       { status: 500 }
     );
   }
