@@ -12,17 +12,10 @@ export async function GET() {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: 'Say "Melos API is working!" in exactly those words' }],
-            },
-          ],
-        }),
       }
     );
 
@@ -36,21 +29,28 @@ export async function GET() {
       }, { status: 500 });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    // Filter for models that support generateContent
+    const generateContentModels = data.models
+      .filter((model: any) => model.supportedGenerationMethods?.includes('generateContent'))
+      .map((model: any) => ({
+        name: model.name,
+        displayName: model.displayName,
+        inputTokenLimit: model.inputTokenLimit,
+        outputTokenLimit: model.outputTokenLimit,
+      }));
 
     return NextResponse.json({
       status: 'success',
-      message: 'API key is valid and working',
-      apiKeyPreview: apiKey.substring(0, 10) + '...',
-      modelResponse: reply,
+      message: 'Available models for generateContent',
+      modelCount: generateContentModels.length,
+      models: generateContentModels,
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
       status: 'error',
-      message: 'API key test failed',
+      message: 'Failed to list models',
       error: errorMessage,
     }, { status: 500 });
   }
 }
-
