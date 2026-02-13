@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Reset Tailwind defaults that conflict with our layout */
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
 
 * {
   box-sizing: border-box;
@@ -75,6 +79,12 @@ nav a:hover,
 nav a.active {
   background-color: #333;
   color: #fff;
+}
+
+/* Ensure links don't get overridden */
+a {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 /* --- LAYOUT CONTAINERS --- */
