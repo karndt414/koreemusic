@@ -62,9 +62,9 @@ export async function POST(request: NextRequest) {
 User message: ${message}`;
 
     // Use the REST API directly
-    // Using Gemini 2.5 Flash Lite for best free tier rate limits (10 RPM)
+    // Using Gemini 2.0 Flash
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
