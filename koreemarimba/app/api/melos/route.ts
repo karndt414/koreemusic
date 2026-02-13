@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
 const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on:
@@ -51,17 +50,14 @@ export async function POST(request: NextRequest) {
     if (!apiKey) {
       console.error('GEMINI_API_KEY not found in environment');
       return NextResponse.json(
-        { error: 'API key not configured. Please set GEMINI_API_KEY in .env.local' },
+        { error: 'API key not configured' },
         { status: 500 }
       );
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-    // Build the full message with system prompt and history
+    // Build conversation context
     const historyText = conversationHistory
-      .slice(-4) // Last 4 messages for context
+      .slice(-4)
       .map((msg: { role: string; content: string }) => `${msg.role === 'user' ? 'User' : 'Melos'}: ${msg.content}`)
       .join('\n\n');
 
@@ -69,8 +65,29 @@ export async function POST(request: NextRequest) {
 
 ${historyText ? 'Previous conversation:\n' + historyText + '\n\n' : ''}Current user message: ${message}`;
 
-    const response = await model.generateContent(fullMessage);
-    const reply = response.response.text();
+    // Use the REST API directly
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: fullMessage }],
+            },
+          ],
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`API error: ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await response.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
       throw new Error('Empty response from Gemini API');
@@ -80,10 +97,10 @@ ${historyText ? 'Previous conversation:\n' + historyText + '\n\n' : ''}Current u
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('Melos API error:', errorMessage);
-    
+
     return NextResponse.json(
-      { 
-        error: 'Failed to get response from Melos: ' + errorMessage
+      {
+        error: 'Failed to get response from Melos: ' + errorMessage,
       },
       { status: 500 }
     );
