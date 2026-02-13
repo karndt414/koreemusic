@@ -49,7 +49,7 @@ export default function Melos() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.reply) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -60,7 +60,7 @@ export default function Melos() {
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `Sorry, I encountered an error: ${data.error}. Please try again.`,
+          content: `Sorry, I encountered an error: ${data.error || 'Unable to generate response'}. Please check your API key and try again.`,
         };
         setMessages((prev) => [...prev, errorMessage]);
       }
@@ -69,7 +69,7 @@ export default function Melos() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Oops! Something went wrong. Please try again later.',
+        content: 'Oops! Connection error. Please make sure your Gemini API key is set correctly and try again.',
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
