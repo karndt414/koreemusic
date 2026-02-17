@@ -1,35 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { searchMusicData } from '@/lib/ragSearch';
 
-const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on:
-
-1. **Music Distributors & Platforms:**
-   - Major platforms: Spotify, Apple Music, YouTube Music, Amazon Music, Tidal
-   - Distribution services: DistroKid, CD Baby, TuneCore, ONErpm, Ditto Music, Amuse, RouteNote
-   - Aggregators vs. direct distribution
-   - Revenue splits and payment models
-   - Playlist pitching strategies
-   - DSP requirements and best practices
-
-2. **Industry Knowledge:**
-   - Artist career development and growth strategies
-   - Royalty management and copyright
-   - Sync licensing opportunities
-   - Networking and collaboration tips
-   - Marketing and promotion tactics
-   - Release strategies and timing
-   - Metadata and tagging best practices
-
-3. **For Young/Emerging Artists:**
-   - Budget-friendly options
-   - DIY vs. professional help
-   - Building a fanbase
-   - Social media strategies
-   - Collaboration opportunities
+const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on music distributors, streaming platforms, royalties, copyright, and artist development.
 
 Always be:
 - Helpful and encouraging
 - Specific with information and numbers when possible
-- Current with industry trends
 - Honest about pros and cons
 - Supportive of young artists' dreams
 
@@ -37,7 +13,7 @@ Keep responses conversational and friendly. Don't use emojis. If asked about som
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationHistory } = await request.json();
+    const { message } = await request.json();
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -56,14 +32,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build minimal context - only system prompt + current message
-    // This reduces token usage and API calls, helping avoid rate limits
-    const fullMessage = `${MELOS_SYSTEM_PROMPT}
+    // ✅ RETRIEVE: Search your knowledge base for relevant data
+    const retrievedData = searchMusicData(message);
 
-User message: ${message}`;
+    // ✅ AUGMENT: Add retrieved data to the system prompt
+    const augmentedSystemPrompt = retrievedData
+      ? `${MELOS_SYSTEM_PROMPT}\n\nRELEVANT INFORMATION FROM KNOWLEDGE BASE:\n${retrievedData}`
+      : MELOS_SYSTEM_PROMPT;
 
-    // Use Cloudflare Workers AI with Llama 3.3 70B
-    // Free tier: 10,000 requests/day
+    // ✅ GENERATE: Call AI with augmented context
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast`,
       {
@@ -74,10 +51,10 @@ User message: ${message}`;
         },
         body: JSON.stringify({
           messages: [
-            { role: 'system', content: MELOS_SYSTEM_PROMPT },
+            { role: 'system', content: augmentedSystemPrompt },
             { role: 'user', content: message },
           ],
-          max_tokens: 4096,
+          max_tokens: 1024,  // ← Reduced from 4096 (saves tokens!)
           temperature: 0.7,
         }),
       }
