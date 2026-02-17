@@ -16,16 +16,32 @@ export default function Home() {
         <div className="bio">
           <p>
             Hi! I'm Koree Arndt. Welcome to my official site, where you can explore my music
-            and purchase <Link href="/purchase">solos</Link> to bring stories to life through music! Enjoy!!
+            and purchase{' '}
+            <Link href="/purchase" className="bio-link">
+              solos
+            </Link>
+            {' '}to bring stories to life through music! Enjoy!!
           </p>
         </div>
       </main>
 
       <aside className="sidebar">
         <h3>Latest Updates</h3>
-        <p><strong>New Release:</strong> Into Dreamlands is now available for purchase.</p>
+        <div className="update-card">
+          <p><strong>New Release:</strong> Into Dreamlands is now available for purchase.</p>
+        </div>
         <hr />
-        <p>Check out my latest performance videos on YouTube!</p>
+        <div className="update-card">
+          <p>Check out my latest performance videos on YouTube!</p>
+        </div>
+        <hr />
+        <div className="melos-promo">
+          <p><strong>🎵 Meet Melos AI</strong></p>
+          <p className="melos-promo-text">Your personal guide to the music industry. Get expert advice on music distributors, career strategies, and more!</p>
+          <Link href="/melos" className="melos-cta-button">
+            Chat with Melos AI
+          </Link>
+        </div>
       </aside>
     </div>
   );

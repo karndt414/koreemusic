@@ -4,33 +4,41 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    paypal?: {
-      HostedButtons: (config: { hostedButtonId: string }) => { render: (selector: string) => void };
-    };
+    paypal?: any;
   }
 }
 
 export default function IntoDreamlands() {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://www.paypal.com/sdk/js?client-id=BAAdn_AoVt92YcLCIy7ZjM23J_MlOnIKOGNub-q4R0399Lp7WPT04hrHmI1hweAQJppZi7JO-0QvxWVcNo&components=hosted-buttons&enable-funding=venmo&currency=USD";
-    script.async = true;
-    script.onload = () => {
-      if (window.paypal) {
-        window.paypal.HostedButtons({
-          hostedButtonId: "H97X52WNR2TH6",
-        }).render("#paypal-container-H97X52WNR2TH6");
-      }
-    };
-    document.body.appendChild(script);
+    // Add a small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const script = document.createElement('script');
+      script.src = "https://www.paypal.com/sdk/js?client-id=BAAdn_AoVt92YcLCIy7ZjM23J_MlOnIKOGNub-q4R0399Lp7WPT04hrHmI1hweAQJppZi7JO-0QvxWVcNo&components=hosted-buttons&disable-funding=venmo,giropay,eps,ideal,mybank,p24,sepa,sofort,trustly";
+      script.async = true;
+      script.onload = () => {
+        if (window.paypal?.HostedButtons) {
+          window.paypal.HostedButtons({
+            hostedButtonId: "H97X52WNR2TH6",
+          }).render("#paypal-container-H97X52WNR2TH6");
+        } else {
+          console.error('PayPal HostedButtons not available. Retrying...');
+          // Retry after a delay
+          setTimeout(() => {
+            if (window.paypal?.HostedButtons) {
+              window.paypal.HostedButtons({
+                hostedButtonId: "H97X52WNR2TH6",
+              }).render("#paypal-container-H97X52WNR2TH6");
+            }
+          }, 1000);
+        }
+      };
+      script.onerror = () => {
+        console.error('Failed to load PayPal SDK');
+      };
+      document.body.appendChild(script);
+    }, 500);
 
-    return () => {
-      try {
-        document.body.removeChild(script);
-      } catch {
-        // Script may already be removed
-      }
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   return (

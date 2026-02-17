@@ -77,6 +77,8 @@ User message: ${message}`;
             { role: 'system', content: MELOS_SYSTEM_PROMPT },
             { role: 'user', content: message },
           ],
+          max_tokens: 4096,
+          temperature: 0.7,
         }),
       }
     );

@@ -24,6 +24,8 @@ export async function GET() {
           messages: [
             { role: 'user', content: 'Say "Melos API is working!" in exactly those words' },
           ],
+          max_tokens: 4096,
+          temperature: 0.7,
         }),
       }
     );
