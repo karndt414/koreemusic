@@ -46,11 +46,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      console.error('GEMINI_API_KEY not found in environment');
+    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    if (!accountId || !apiToken) {
+      console.error('Cloudflare credentials not found in environment');
       return NextResponse.json(
-        { error: 'API key not configured' },
+        { error: 'API not configured' },
         { status: 500 }
       );
     }
@@ -61,18 +62,20 @@ export async function POST(request: NextRequest) {
 
 User message: ${message}`;
 
-    // Use the REST API directly
-    // Using Gemini 2.0 Flash
+    // Use Cloudflare Workers AI with Llama 3.3 70B
+    // Free tier: 10,000 requests/day
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: fullMessage }],
-            },
+          messages: [
+            { role: 'system', content: MELOS_SYSTEM_PROMPT },
+            { role: 'user', content: message },
           ],
         }),
       }
@@ -84,10 +87,10 @@ User message: ${message}`;
     }
 
     const data = await response.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const reply = data.result?.response;
 
     if (!reply) {
-      throw new Error('Empty response from Gemini API');
+      throw new Error('Empty response from Cloudflare Workers AI');
     }
 
     return NextResponse.json({ reply });

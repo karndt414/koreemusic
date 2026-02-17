@@ -1,26 +1,28 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
   
-  if (!apiKey) {
+  if (!accountId || !apiToken) {
     return NextResponse.json({
       status: 'error',
-      message: 'GEMINI_API_KEY not set in environment',
+      message: 'Cloudflare credentials not set in environment',
     });
   }
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: 'Say "Melos API is working!" in exactly those words' }],
-            },
+          messages: [
+            { role: 'user', content: 'Say "Melos API is working!" in exactly those words' },
           ],
         }),
       }
@@ -32,23 +34,23 @@ export async function GET() {
       return NextResponse.json({
         status: 'error',
         message: 'API call failed',
-        error: data.error?.message || JSON.stringify(data),
+        error: data.errors || JSON.stringify(data),
       }, { status: 500 });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const reply = data.result?.response;
 
     return NextResponse.json({
       status: 'success',
-      message: 'API key is valid and working',
-      apiKeyPreview: apiKey.substring(0, 10) + '...',
+      message: 'Cloudflare Workers AI is working',
+      model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
       modelResponse: reply,
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
       status: 'error',
-      message: 'API key test failed',
+      message: 'API test failed',
       error: errorMessage,
     }, { status: 500 });
   }
