@@ -9,6 +9,91 @@ interface Message {
   text: string;
 }
 
+interface ResourceCategory {
+  title: string;
+  links: { name: string; url: string }[];
+}
+
+const resources: ResourceCategory[] = [
+  {
+    title: 'Music Distributors',
+    links: [
+      { name: 'DistroKid', url: 'https://distrokid.com' },
+      { name: 'TuneCore', url: 'https://tunecore.com' },
+      { name: 'CD Baby', url: 'https://cdbaby.com' },
+      { name: 'Amuse', url: 'https://amuse.io' },
+      { name: 'RouteNote', url: 'https://routenote.com' },
+      { name: 'ONErpm', url: 'https://onerpm.com' },
+    ],
+  },
+  {
+    title: 'Learning Platforms',
+    links: [
+      { name: 'Berklee Online', url: 'https://online.berklee.edu' },
+      { name: 'Coursera Music', url: 'https://coursera.org' },
+      { name: 'Udemy Music Production', url: 'https://udemy.com' },
+      { name: 'Splice Learn', url: 'https://splice.com/learn' },
+      { name: 'Music Theory.net', url: 'https://musictheory.net' },
+      { name: 'YouTube Music Education', url: 'https://youtube.com' },
+    ],
+  },
+  {
+    title: 'Production Tools',
+    links: [
+      { name: 'Ableton Live', url: 'https://ableton.com' },
+      { name: 'FL Studio', url: 'https://image-line.com' },
+      { name: 'Logic Pro', url: 'https://apple.com/logic-pro' },
+      { name: 'REAPER', url: 'https://reaper.fm' },
+      { name: 'Pro Tools', url: 'https://avid.com/pro-tools' },
+      { name: 'Splice Sounds', url: 'https://splice.com/sounds' },
+    ],
+  },
+  {
+    title: 'Royalties & Rights',
+    links: [
+      { name: 'ASCAP', url: 'https://ascap.com' },
+      { name: 'BMI', url: 'https://bmi.com' },
+      { name: 'SESAC', url: 'https://sesac.com' },
+      { name: 'SoundExchange', url: 'https://soundexchange.com' },
+      { name: 'The MLC', url: 'https://themlc.com' },
+      { name: 'Copyright.gov', url: 'https://copyright.gov' },
+    ],
+  },
+  {
+    title: 'Streaming Platforms',
+    links: [
+      { name: 'Spotify for Artists', url: 'https://artists.spotify.com' },
+      { name: 'Apple Music for Artists', url: 'https://artists.apple.com' },
+      { name: 'YouTube Music', url: 'https://youtube.com/music' },
+      { name: 'TIDAL Artists', url: 'https://tidal.com' },
+      { name: 'SoundCloud for Artists', url: 'https://soundcloud.com/artists' },
+      { name: 'Bandcamp', url: 'https://bandcamp.com' },
+    ],
+  },
+  {
+    title: 'Music Promotion',
+    links: [
+      { name: 'SubmitHub', url: 'https://submithub.com' },
+      { name: 'Groover', url: 'https://groover.co' },
+      { name: 'Musosoup', url: 'https://musosoup.com' },
+      { name: 'PlaylistPush', url: 'https://playlistpush.com' },
+      { name: 'TuneMyMusic', url: 'https://tunemymusic.com' },
+      { name: 'DistroKid Promote', url: 'https://distrokid.com/promote' },
+    ],
+  },
+  {
+    title: 'Collaboration & Networking',
+    links: [
+      { name: 'BeatStars', url: 'https://beatstars.com' },
+      { name: 'Splice Community', url: 'https://splice.com' },
+      { name: 'Soundtrap', url: 'https://soundtrap.com' },
+      { name: 'BeatMaker Communities', url: 'https://reddit.com/r/makinghiphop' },
+      { name: 'Discord Music Servers', url: 'https://discord.com' },
+      { name: 'Musician Forums', url: 'https://gearslutz.com' },
+    ],
+  },
+];
+
 export default function MelosPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -18,6 +103,7 @@ export default function MelosPage() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -207,6 +293,45 @@ export default function MelosPage() {
             </button>
           </div>
         </div>
+
+        <aside className="melos-resources-sidebar">
+          <h3>Resources</h3>
+          <div className="resources-list">
+            {resources.map((category, index) => (
+              <div key={index} className="resource-category">
+                <button
+                  className="resource-header"
+                  onClick={() =>
+                    setOpenCategory(
+                      openCategory === category.title ? null : category.title
+                    )
+                  }
+                >
+                  <span>{category.title}</span>
+                  <span className="dropdown-arrow">
+                    {openCategory === category.title ? '▼' : '▶'}
+                  </span>
+                </button>
+                {openCategory === category.title && (
+                  <div className="resource-links">
+                    {category.links.map((link, linkIndex) => (
+                      <a
+                        key={linkIndex}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="resource-link"
+                      >
+                        {link.name}
+                        <span className="external-icon">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </aside>
       </div>
     </div>
   );
