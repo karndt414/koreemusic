@@ -64,6 +64,17 @@ export default function IntoDreamlands() {
         <p><strong>Instrument:</strong> 5 Octave Marimba</p>
         <p><strong>Difficulty:</strong> Advanced</p>
         <hr />
+        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+          <a
+            href="https://open.spotify.com/track/5Gs1WLNBjJvyjC5tPaK5PD?si=3067cf42933f474b"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ background: '#1DB954', color: '#fff', padding: '12px 24px', textDecoration: 'none', borderRadius: '25px', display: 'inline-block', fontWeight: 'bold', fontSize: '0.95rem' }}
+          >
+            🎵 Listen on Spotify
+          </a>
+        </div>
+        <hr />
         <div>
           <div id="paypal-container-H97X52WNR2TH6"></div>
         </div>

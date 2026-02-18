@@ -56,10 +56,18 @@ export default function Purchase() {
             <p>
               <Link
                 href="/songs/into-dreamlands"
-                style={{ background: '#333', color: '#fff', padding: '10px 20px', textDecoration: 'none', borderRadius: '5px', display: 'inline-block', marginTop: '10px' }}
+                style={{ background: '#333', color: '#fff', padding: '10px 20px', textDecoration: 'none', borderRadius: '5px', display: 'inline-block', marginTop: '10px', marginRight: '10px' }}
               >
                 View Details
               </Link>
+              <a
+                href="https://open.spotify.com/track/5Gs1WLNBjJvyjC5tPaK5PD?si=3067cf42933f474b"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ background: '#1DB954', color: '#fff', padding: '10px 20px', textDecoration: 'none', borderRadius: '5px', display: 'inline-block', marginTop: '10px' }}
+              >
+                🎵 Listen on Spotify
+              </a>
             </p>
           </div>
 
