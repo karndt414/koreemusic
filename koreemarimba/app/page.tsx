@@ -1,7 +1,11 @@
-// src/app/page.js
+'use client';
+
 import Link from 'next/link';
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 export default function Home() {
+  usePageVisitor('/');
+
   return (
     <div className="container">
       <main className="main-content">

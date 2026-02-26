@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 declare global {
   interface Window {
@@ -9,6 +10,8 @@ declare global {
 }
 
 export default function IntoDreamlands() {
+  usePageVisitor('/songs/into-dreamlands');
+
   useEffect(() => {
     // Add a small delay to ensure DOM is ready
     const timer = setTimeout(() => {

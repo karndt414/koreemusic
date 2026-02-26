@@ -1,8 +1,10 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 export default function Purchase() {
+  usePageVisitor('/purchase');
   const cloudOverlayRef = useRef<HTMLDivElement>(null);
   const coverArtRef = useRef<HTMLImageElement>(null);
 

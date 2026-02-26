@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchMusicData } from '@/lib/ragSearch';
 import { searchFAQCache } from '@/lib/faqCache';
+import { supabase } from '@/lib/supabaseClient';
 
 const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on music distributors, streaming platforms, royalties, copyright, and artist development.
 
@@ -13,6 +14,8 @@ Always be:
 Keep responses conversational and friendly. Don't use emojis. If asked about something outside your expertise, politely redirect to music industry topics.`;
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  
   try {
     const { message } = await request.json();
 
@@ -23,12 +26,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get user's IP and user agent for tracking
+    const ip = request.headers.get('x-forwarded-for') || 
+               request.headers.get('x-real-ip') || 
+               'unknown';
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+
     // 🎯 STEP 1: Check FAQ Cache First (saves neurons!)
-    // const faqResponse = searchFAQCache(message);
-    //if (faqResponse) {
-      //console.log('✅ FAQ Cache Hit - No neurons used');
-      //return NextResponse.json({ reply: faqResponse, cached: true });
-    //}
+    const faqResponse = searchFAQCache(message);
+    if (faqResponse) {
+      const responseTime = Date.now() - startTime;
+      
+      // Log to Supabase
+      const { error: faqLogError } = await supabase.from('melos_prompts').insert({
+        user_message: message,
+        ai_response: faqResponse,
+        from_faq_cache: true,
+        tokens_used: 0,
+        response_time_ms: responseTime,
+        ip_address: ip,
+        user_agent: userAgent,
+      });
+      if (faqLogError) console.error('Supabase log error:', faqLogError);
+
+      console.log('✅ FAQ Cache Hit - No neurons used');
+      return NextResponse.json({ reply: faqResponse, cached: true });
+    }
 
     const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
     const apiToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -62,8 +85,8 @@ export async function POST(request: NextRequest) {
             { role: 'system', content: augmentedSystemPrompt },
             { role: 'user', content: message },
           ],
-          max_tokens: 512,  // ← Optimized from 1024 (50% reduction!)
-          temperature: 0.6, // ← Slightly lower for more consistent answers
+          max_tokens: 512,
+          temperature: 0.6,
         }),
       }
     );
@@ -79,6 +102,21 @@ export async function POST(request: NextRequest) {
     if (!reply) {
       throw new Error('Empty response from Cloudflare Workers AI');
     }
+
+    const responseTime = Date.now() - startTime;
+    const tokensUsed = Math.ceil(message.length / 4) + Math.ceil(reply.length / 4); // Rough estimate
+
+    // 📊 Log to Supabase
+    const { error: logError } = await supabase.from('melos_prompts').insert({
+      user_message: message,
+      ai_response: reply,
+      from_faq_cache: false,
+      tokens_used: tokensUsed,
+      response_time_ms: responseTime,
+      ip_address: ip,
+      user_agent: userAgent,
+    });
+    if (logError) console.error('Supabase log error:', logError);
 
     return NextResponse.json({ reply, cached: false });
   } catch (error: unknown) {

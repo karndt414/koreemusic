@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 interface Message {
   role: 'user' | 'bot';
@@ -104,6 +105,7 @@ export default function MelosPage() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  usePageVisitor('/melos');
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;

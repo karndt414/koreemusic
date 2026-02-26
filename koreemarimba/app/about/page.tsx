@@ -1,6 +1,10 @@
-export const metadata = { title: 'About - Koree Arndt Music' };
+'use client';
+
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 export default function About() {
+  usePageVisitor('/about');
+
   return (
     <div className="container">
       <main className="main-content">

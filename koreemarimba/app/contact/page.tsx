@@ -1,7 +1,9 @@
 'use client';
 import { useState, FormEvent } from 'react';
+import { usePageVisitor } from '@/lib/usePageVistor';
 
 export default function Contact() {
+  usePageVisitor('/contact');
   const [status, setStatus] = useState({ message: '', color: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
