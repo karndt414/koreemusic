@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { usePageVisitor } from '@/lib/usePageVistor';
@@ -151,6 +152,16 @@ export default function MelosPage() {
     <div className="melos-page">
       <div className="melos-hero">
         <div className="melos-hero-content">
+          <div className="melos-hero-brand">
+            <Image
+              src="/images/melosLogo.png"
+              alt="Melos AI logo"
+              width={320}
+              height={320}
+              className="melos-hero-logo"
+              priority
+            />
+          </div>
           <p className="melos-kicker">The intelligent co-composer designed to amplify your musical artistry.</p>
           <h1>From first motif to finished cue, still unmistakably yours.</h1>
           <p className="melos-tagline">For composers on tight turnarounds, Melos AI helps you evolve sketches into expressive, deadline-ready music without surrendering creative control.</p>
