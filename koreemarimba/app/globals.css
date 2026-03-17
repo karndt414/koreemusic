@@ -612,11 +612,15 @@ footer a {
 
 .melos-message-bot {
   justify-content: flex-start;
+  align-self: flex-start;
 }
 
 .melos-message-user {
   justify-content: flex-end;
   flex-direction: row-reverse;
+  align-self: flex-end;
+  width: auto;
+  max-width: 100%;
 }
 
 .melos-message-avatar {
