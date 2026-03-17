@@ -99,7 +99,7 @@ export default function MelosPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'bot',
-      text: "Hello! I'm **Melos**, your AI guide to the music industry. I specialize in helping young artists understand music distributors, industry strategies, and career development. Whether you're curious about Spotify, Apple Music, independent distribution, or building your fanbase—I'm here to help. What would you like to know?",
+      text: "Welcome to **Melos AI**. I am your collaborative co-composer, built to help you expand motifs, explore harmonic options, and shape production-ready ideas fast while keeping your signature voice at the center. Share your cue brief, mood, instrumentation, or first melodic idea and we will build from there.",
     },
   ]);
   const [input, setInput] = useState('');
@@ -151,13 +151,14 @@ export default function MelosPage() {
     <div className="melos-page">
       <div className="melos-hero">
         <div className="melos-hero-content">
-          <h1>Melos AI</h1>
-          <p className="melos-tagline">Your Expert Guide to the Music Industry</p>
-          <p className="melos-description">Get personalized advice about music distributors, career strategies, and everything you need to succeed as a young artist.</p>
+          <p className="melos-kicker">The intelligent co-composer designed to amplify your musical artistry.</p>
+          <h1>From first motif to finished cue, still unmistakably yours.</h1>
+          <p className="melos-tagline">For composers on tight turnarounds, Melos AI helps you evolve sketches into expressive, deadline-ready music without surrendering creative control.</p>
+          <a href="#melos-chat" className="melos-hero-cta">Start Co-Composing</a>
         </div>
       </div>
 
-      <div className="melos-wrapper">
+      <div className="melos-wrapper" id="melos-chat">
         <div className="melos-chat-container">
           <div className="melos-messages">
             {messages.map((message, index) => (
@@ -282,7 +283,7 @@ export default function MelosPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Ask me about music distributors, career strategies, promotion tactics..."
+              placeholder="Describe your motif, cue brief, reference tone, or revision note..."
               disabled={loading}
               className="melos-input"
             />

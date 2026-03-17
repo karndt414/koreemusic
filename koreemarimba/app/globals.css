@@ -453,47 +453,118 @@ footer a {
 }
 
 /* --- MELOS AI PAGE STYLES --- */
+.melos-brand {
+  --melos-deep-indigo: #0a1128;
+  --melos-rosewood: #c2593a;
+  --melos-resonance-gold: #d4af37;
+  --melos-studio-sand: #f4f1eb;
+  --melos-ink: #1a2340;
+  font-family: var(--melos-font-dm-sans), 'DM Sans', sans-serif;
+}
+
+.melos-brand h1,
+.melos-brand h2,
+.melos-brand h3,
+.melos-brand h4,
+.melos-brand h5,
+.melos-brand h6 {
+  font-family: var(--melos-font-outfit), 'Outfit', sans-serif;
+}
+
 .melos-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background:
+    radial-gradient(circle at 14% 16%, rgba(212, 175, 55, 0.18), transparent 40%),
+    radial-gradient(circle at 85% 8%, rgba(194, 89, 58, 0.2), transparent 34%),
+    var(--melos-studio-sand);
   padding-bottom: 2rem;
 }
 
 .melos-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 4rem 2rem;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: var(--melos-studio-sand);
+  padding: 3rem 1rem 2.4rem;
+}
+
+.melos-hero-content {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  background: linear-gradient(138deg, var(--melos-deep-indigo), #1b2a56 55%, #23366a);
+  border-radius: 24px;
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  box-shadow: 0 24px 56px rgba(10, 17, 40, 0.34);
+  padding: 2rem;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.melos-hero-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(212, 175, 55, 0.08) 45%, transparent 70%),
+    radial-gradient(circle at 84% 24%, rgba(194, 89, 58, 0.22), transparent 42%);
+  pointer-events: none;
+}
+
+.melos-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--melos-resonance-gold);
+  position: relative;
+  z-index: 1;
 }
 
 .melos-hero-content h1 {
-  font-size: 3rem;
-  margin: 0 0 1rem 0;
-  font-weight: 800;
-  letter-spacing: -1px;
+  font-size: clamp(1.85rem, 5vw, 3.4rem);
+  margin: 0.85rem 0 0;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  position: relative;
+  z-index: 1;
 }
 
 .melos-tagline {
-  font-size: 1.5rem;
-  margin: 0 0 1rem 0;
-  font-weight: 300;
-  opacity: 0.95;
+  font-size: 1.03rem;
+  margin: 1rem 0 0;
+  max-width: 64ch;
+  color: rgba(244, 241, 235, 0.93);
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 
-.melos-description {
-  font-size: 1rem;
-  margin: 0;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  opacity: 0.9;
-  line-height: 1.6;
+.melos-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.2rem;
+  padding: 0.82rem 1.28rem;
+  border-radius: 999px;
+  background: var(--melos-rosewood);
+  color: var(--melos-studio-sand);
+  border: 1px solid rgba(244, 241, 235, 0.45);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.melos-hero-cta:hover {
+  transform: translateY(-1px);
+  background: #b04c30;
+  box-shadow: 0 12px 22px rgba(194, 89, 58, 0.36);
 }
 
 .melos-wrapper {
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
   padding: 0 1rem;
   display: flex;
   gap: 0;
@@ -501,14 +572,14 @@ footer a {
 }
 
 .melos-chat-container {
-  background: white;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 52px rgba(10, 17, 40, 0.2);
   display: flex;
   flex-direction: column;
   height: 700px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(10, 17, 40, 0.14);
 }
 
 .melos-messages {
@@ -518,7 +589,7 @@ footer a {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: #fafbfc;
+  background: #fcfbf8;
 }
 
 .melos-message {
@@ -561,8 +632,8 @@ footer a {
 }
 
 .melos-message-user .melos-message-avatar {
-  background: #667eea;
-  color: white;
+  background: var(--melos-deep-indigo);
+  color: var(--melos-studio-sand);
 }
 
 .melos-message-bubble {
@@ -574,15 +645,15 @@ footer a {
 }
 
 .melos-message-bot .melos-message-bubble {
-  background: white;
-  color: #2d3748;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  color: var(--melos-ink);
+  border: 1px solid rgba(10, 17, 40, 0.12);
+  box-shadow: 0 2px 8px rgba(10, 17, 40, 0.08);
 }
 
 .melos-message-user .melos-message-bubble {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(140deg, var(--melos-deep-indigo), #1c2e61);
+  color: var(--melos-studio-sand);
   border: none;
 }
 
@@ -616,7 +687,7 @@ footer a {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #667eea;
+  background: var(--melos-rosewood);
   animation: typing 1.4s infinite;
 }
 
@@ -645,30 +716,30 @@ footer a {
   display: flex;
   gap: 0.75rem;
   padding: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-  background: white;
+  border-top: 1px solid rgba(10, 17, 40, 0.15);
+  background: var(--melos-studio-sand);
 }
 
 .melos-input {
   flex: 1;
   padding: 0.875rem 1rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(10, 17, 40, 0.17);
   border-radius: 10px;
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s ease;
-  background: #f9fafb;
+  background: #fff;
 }
 
 .melos-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--melos-rosewood);
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(194, 89, 58, 0.2);
 }
 
 .melos-input::placeholder {
-  color: #a0aec0;
+  color: #7b8398;
 }
 
 .melos-input:disabled {
@@ -679,8 +750,8 @@ footer a {
 
 .melos-send-btn {
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(140deg, var(--melos-rosewood), #b04c30);
+  color: var(--melos-studio-sand);
   border: none;
   border-radius: 10px;
   font-size: 1.2rem;
@@ -688,12 +759,12 @@ footer a {
   font-weight: 600;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(194, 89, 58, 0.36);
 }
 
 .melos-send-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 8px 18px rgba(194, 89, 58, 0.48);
 }
 
 .melos-send-btn:active:not(:disabled) {
@@ -715,22 +786,22 @@ footer a {
 }
 
 .melos-messages::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
+  background: #c8b27b;
   border-radius: 4px;
 }
 
 .melos-messages::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+  background: #a78b3f;
 }
 
 /* Resources Sidebar */
 .melos-resources-sidebar {
   width: 450px;
-  background: #f9fafb;
-  border-left: 1px solid #e2e8f0;
+  background: #f8f5ef;
+  border-left: 1px solid rgba(10, 17, 40, 0.16);
   border-radius: 0 16px 16px 0;
   padding: 2rem 1.5rem;
-  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05);
+  box-shadow: -2px 0 4px rgba(10, 17, 40, 0.08);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -740,10 +811,10 @@ footer a {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--melos-deep-indigo);
   text-align: center;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid rgba(10, 17, 40, 0.12);
 }
 
 .resources-list {
@@ -753,7 +824,7 @@ footer a {
 }
 
 .resource-category {
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(10, 17, 40, 0.12);
   border-radius: 10px;
   background: white;
   overflow: hidden;
@@ -766,7 +837,7 @@ footer a {
 
 .resource-category:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #cbd5e0;
+  border-color: rgba(10, 17, 40, 0.3);
 }
 
 .resource-header {
@@ -779,7 +850,7 @@ footer a {
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
-  color: #667eea;
+  color: var(--melos-deep-indigo);
   font-size: 1rem;
   transition: all 0.2s ease;
   text-align: center;
@@ -792,8 +863,8 @@ footer a {
 }
 
 .resource-header:hover {
-  background: #f9fafb;
-  color: #764ba2;
+  background: #f8f2e7;
+  color: var(--melos-rosewood);
   padding-left: 1.4rem;
 }
 
@@ -805,8 +876,8 @@ footer a {
 }
 
 .resource-links {
-  background: #fafbfc;
-  border-top: 1px solid #e2e8f0;
+  background: #f8f6f2;
+  border-top: 1px solid rgba(10, 17, 40, 0.12);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -816,7 +887,7 @@ footer a {
 .resource-link {
   padding: 0.75rem 0.875rem;
   background: white;
-  color: #2d3748;
+  color: var(--melos-ink);
   text-decoration: none;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -824,17 +895,17 @@ footer a {
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s ease;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(10, 17, 40, 0.12);
   text-align: left;
   line-height: 1.4;
 }
 
 .resource-link:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
+  background: linear-gradient(140deg, var(--melos-deep-indigo), #1f2f63);
+  color: var(--melos-studio-sand);
+  border-color: var(--melos-deep-indigo);
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(10, 17, 40, 0.28);
 }
 
 .external-icon {
@@ -851,7 +922,11 @@ footer a {
 /* Responsive Design */
 @media (max-width: 768px) {
   .melos-hero {
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .melos-hero-content {
+    padding: 1.35rem;
   }
 
   .melos-hero-content h1 {
@@ -859,7 +934,7 @@ footer a {
   }
 
   .melos-tagline {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .melos-chat-container {
@@ -889,11 +964,11 @@ footer a {
     font-size: 1.5rem;
   }
 
-  .melos-tagline {
-    font-size: 1rem;
+  .melos-kicker {
+    font-size: 0.72rem;
   }
 
-  .melos-description {
+  .melos-tagline {
     font-size: 0.9rem;
   }
 
