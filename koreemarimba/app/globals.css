@@ -1048,83 +1048,93 @@ footer a {
 
 /* Update Card Styling */
 .update-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(140deg, rgba(10, 17, 40, 0.08), rgba(212, 175, 55, 0.16));
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 0.75rem 0;
-  border-left: 4px solid #667eea;
-  transition: all 0.3s ease;
+  border-left: 4px solid #c2593a;
+  border: 1px solid rgba(10, 17, 40, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .update-card:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 10px 22px rgba(10, 17, 40, 0.2);
+  border-color: rgba(194, 89, 58, 0.35);
 }
 
 .update-card p {
   margin: 0;
-  color: #2d3748;
+  color: #1a2340;
 }
 
 /* Melos Promo Section */
 .melos-promo {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(138deg, #0a1128, #1b2a56 55%, #23366a);
+  color: #f4f1eb;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-top: 1rem;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  animation: melosPulse 3s ease-in-out infinite;
+  box-shadow: 0 20px 44px rgba(10, 17, 40, 0.32);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes melosPulse {
-  0%,
-  100% {
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-  }
-  50% {
-    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
-  }
+.melos-promo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(212, 175, 55, 0.1) 45%, transparent 70%),
+    radial-gradient(circle at 90% 16%, rgba(194, 89, 58, 0.22), transparent 44%);
+  pointer-events: none;
 }
 
 .melos-promo p {
   margin: 0 0 0.75rem 0;
   font-size: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .melos-promo p:first-child {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  color: #d4af37;
+  letter-spacing: 0.02em;
 }
 
 .melos-promo-text {
   font-size: 0.95rem;
   line-height: 1.5;
-  opacity: 0.95;
+  opacity: 0.96;
   margin-bottom: 1rem !important;
 }
 
 /* Melos CTA Button */
 .melos-cta-button {
-  display: inline-block;
-  background: white;
-  color: #667eea;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c2593a;
+  color: #f4f1eb;
+  padding: 0.82rem 1.28rem;
+  border-radius: 999px;
   text-decoration: none;
   font-weight: 700;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(244, 241, 235, 0.45);
+  box-shadow: 0 10px 20px rgba(194, 89, 58, 0.28);
+  position: relative;
+  z-index: 1;
 }
 
 .melos-cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  background: #f0f4f8;
-  color: #764ba2;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(194, 89, 58, 0.36);
+  background: #b04c30;
 }
 
 .melos-cta-button:active {
