@@ -302,6 +302,50 @@ footer a {
   z-index: 50;
 }
 
+#sun-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 240px;
+  height: 240px;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0;
+  transform: translate(45px, -45px) scale(0.5);
+  transition: opacity 0.8s ease, transform 1.1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.sun-core {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 34%, #fff9c9 0%, #ffd45f 30%, #f5a623 72%, rgba(245, 166, 35, 0) 100%);
+  box-shadow:
+    0 0 34px rgba(255, 205, 74, 0.72),
+    0 0 70px rgba(255, 170, 36, 0.45),
+    0 0 120px rgba(255, 154, 62, 0.35);
+}
+
+#sun-overlay.active {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@media (max-width: 600px) {
+  #sun-overlay {
+    width: 160px;
+    height: 160px;
+  }
+
+  .sun-core {
+    width: 110px;
+    height: 110px;
+  }
+}
+
 /* --- MELOS CHATBOT STYLES --- */
 .melos-container {
   max-width: 800px;
