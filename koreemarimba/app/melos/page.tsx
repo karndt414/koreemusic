@@ -154,7 +154,7 @@ export default function MelosPage() {
         <div className="melos-hero-content">
           <div className="melos-hero-brand">
             <Image
-              src="/images/melosLogo.png"
+              src="/images/melosLogo.png?v=20260402"
               alt="Melos AI logo"
               width={320}
               height={320}
