@@ -156,8 +156,8 @@ export default function MelosPage() {
             <Image
               src="/images/melosLogo-v2.png"
               alt="Melos AI logo"
-              width={320}
-              height={320}
+              fill
+              sizes="(max-width: 768px) 120px, 320px"
               className="melos-hero-logo"
               priority
             />
