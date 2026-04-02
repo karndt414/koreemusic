@@ -11,49 +11,55 @@ export default function Purchase() {
   const flyingHighRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    let dreamlandsVisible = false;
+    let flyingHighVisible = false;
+
+    const syncAnimationState = () => {
+      if (!cloudOverlayRef.current || !sunOverlayRef.current) return;
+
+      // Priority: Flying High sun effect first, Dreamlands clouds second.
+      if (flyingHighVisible) {
+        sunOverlayRef.current.classList.add('active');
+        cloudOverlayRef.current.classList.remove('active');
+        return;
+      }
+
+      if (dreamlandsVisible) {
+        cloudOverlayRef.current.classList.add('active');
+        sunOverlayRef.current.classList.remove('active');
+        return;
+      }
+
+      cloudOverlayRef.current.classList.remove('active');
+      sunOverlayRef.current.classList.remove('active');
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (cloudOverlayRef.current) {
-            if (entry.isIntersecting) {
-              cloudOverlayRef.current.classList.add('active');
-            } else {
-              cloudOverlayRef.current.classList.remove('active');
-            }
+          if (entry.target === coverArtRef.current) {
+            dreamlandsVisible = entry.isIntersecting;
+          }
+
+          if (entry.target === flyingHighRef.current) {
+            flyingHighVisible = entry.isIntersecting;
           }
         });
+
+        syncAnimationState();
       },
-      { threshold: 0.5 }
+      { threshold: 0.55 }
     );
 
     if (coverArtRef.current) {
       observer.observe(coverArtRef.current);
     }
 
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const sunObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!sunOverlayRef.current) return;
-
-          if (entry.isIntersecting) {
-            sunOverlayRef.current.classList.add('active');
-          } else {
-            sunOverlayRef.current.classList.remove('active');
-          }
-        });
-      },
-      { threshold: 0.55 }
-    );
-
     if (flyingHighRef.current) {
-      sunObserver.observe(flyingHighRef.current);
+      observer.observe(flyingHighRef.current);
     }
 
-    return () => sunObserver.disconnect();
+    return () => observer.disconnect();
   }, []);
 
   return (
