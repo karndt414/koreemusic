@@ -73,6 +73,25 @@ export default function Purchase() {
             </p>
           </div>
 
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h2>Flying High</h2>
+            <Link href="/songs/flying-high">
+              <img
+                src="/images/Flying_High.jpg"
+                alt="Flying High Album Cover"
+                style={{ maxWidth: '300px', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0,0,0,0.2)' }}
+              />
+            </Link>
+            <p>
+              <Link
+                href="/songs/flying-high"
+                style={{ background: '#333', color: '#fff', padding: '10px 20px', textDecoration: 'none', borderRadius: '5px', display: 'inline-block', marginTop: '10px' }}
+              >
+                View Details
+              </Link>
+            </p>
+          </div>
+
           <h3>Catalog Details</h3>
           <table>
             <thead>

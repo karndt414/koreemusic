@@ -74,7 +74,7 @@ export default function IntoDreamlands() {
             rel="noopener noreferrer"
             style={{ background: '#1DB954', color: '#fff', padding: '12px 24px', textDecoration: 'none', borderRadius: '25px', display: 'inline-block', fontWeight: 'bold', fontSize: '0.95rem' }}
           >
-            🎵 Listen on Spotify
+            Listen on Spotify
           </a>
         </div>
         <hr />
