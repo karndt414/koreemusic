@@ -68,7 +68,7 @@ export default function Purchase() {
                 rel="noopener noreferrer"
                 style={{ background: '#1DB954', color: '#fff', padding: '10px 20px', textDecoration: 'none', borderRadius: '5px', display: 'inline-block', marginTop: '10px' }}
               >
-                🎵 Listen on Spotify
+                Listen on Spotify
               </a>
             </p>
           </div>
