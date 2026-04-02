@@ -162,8 +162,8 @@ export default function MelosPage() {
               priority
             />
           </div>
-          <p className="melos-kicker">The intelligent co-composer designed to amplify your musical artistry.</p>
-          <h1>From first motif to finished cue, still unmistakably yours.</h1>
+          <p className="melos-kicker">The intelligent co-composer designed to amplify your artistry.</p>
+          <h1>Turning your melody into your masterpiece.</h1>
           <p className="melos-tagline">For composers on tight turnarounds, Melos AI helps you evolve sketches into expressive, deadline-ready music without surrendering creative control.</p>
           <a href="#melos-chat" className="melos-hero-cta">Start Co-Composing</a>
         </div>
