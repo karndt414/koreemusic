@@ -323,7 +323,7 @@ footer a {
   width: 170vmax;
   height: 170vmax;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.34) 0%, rgba(242, 247, 255, 0.24) 28%, rgba(226, 236, 255, 0.14) 52%, rgba(226, 236, 255, 0) 72%);
+  background: radial-gradient(circle, rgba(255, 241, 122, 0.38) 0%, rgba(255, 219, 77, 0.28) 28%, rgba(255, 200, 36, 0.18) 52%, rgba(255, 200, 36, 0) 72%);
   opacity: 0;
   transition: opacity 0.9s ease;
 }
@@ -335,12 +335,12 @@ footer a {
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, #ffffff 0%, #f6f9ff 22%, #e7efff 48%, #d9e6ff 72%, rgba(217, 230, 255, 0) 100%);
+  background: radial-gradient(circle at 32% 30%, #fff9b8 0%, #ffe45f 20%, #ffd12a 46%, #ffbf00 70%, rgba(255, 191, 0, 0) 100%);
   box-shadow:
-    0 0 95px rgba(255, 255, 255, 0.96),
-    0 0 210px rgba(234, 242, 255, 0.9),
-    0 0 360px rgba(214, 226, 255, 0.74),
-    0 0 560px rgba(198, 214, 255, 0.58);
+    0 0 105px rgba(255, 226, 94, 1),
+    0 0 230px rgba(255, 208, 58, 0.92),
+    0 0 380px rgba(255, 191, 0, 0.76),
+    0 0 580px rgba(255, 173, 0, 0.62);
 }
 
 .sun-core::after {
@@ -348,7 +348,7 @@ footer a {
   position: absolute;
   inset: -34px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.62) 0%, rgba(235, 243, 255, 0.28) 44%, rgba(220, 232, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 240, 145, 0.6) 0%, rgba(255, 214, 80, 0.32) 44%, rgba(255, 188, 40, 0) 70%);
   filter: blur(2px);
 }
 
