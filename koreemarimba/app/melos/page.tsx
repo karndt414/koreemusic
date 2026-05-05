@@ -5,6 +5,9 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { usePageVisitor } from '@/lib/usePageVistor';
+import MidiPanel from '../midi/MidiPanel';
+import { formatMidiContextForAI } from '../midi/midiAiContext';
+import type { MidiSummary } from '../midi/types';
 
 interface Message {
   role: 'user' | 'bot';
@@ -106,7 +109,12 @@ export default function MelosPage() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [pendingMidiContext, setPendingMidiContext] = useState<MidiSummary | null>(null);
   usePageVisitor('/melos');
+
+  const attachMidiContext = (midiSummary: MidiSummary) => {
+    setPendingMidiContext(midiSummary);
+  };
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -116,11 +124,21 @@ export default function MelosPage() {
     setInput('');
     setLoading(true);
 
+    const midiBlock = pendingMidiContext
+      ? formatMidiContextForAI(pendingMidiContext)
+      : '';
+    const messageToSend = pendingMidiContext
+      ? `${midiBlock}\n\n${input}`
+      : input;
+    setPendingMidiContext(null);
+
+    const conversationHistory = [...messages, { role: 'user' as const, text: messageToSend }];
+
     try {
       const res = await fetch('/api/melos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: messageToSend, conversationHistory }),
       });
 
       const data = await res.json();
@@ -287,6 +305,8 @@ export default function MelosPage() {
               </div>
             )}
           </div>
+
+          <MidiPanel onMidiReady={attachMidiContext} />
 
           <div className="melos-input-area">
             <input

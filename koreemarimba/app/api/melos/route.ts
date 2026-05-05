@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { searchMusicData } from '@/lib/ragSearch';
 import { searchFAQCache } from '@/lib/faqCache';
 import { supabase } from '@/lib/supabaseClient';
+import { getMidiSystemPromptAddition } from '@/app/midi/midiAiContext';
 
-const MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on music distributors, streaming platforms, royalties, copyright, and artist development.
+const BASE_MELOS_SYSTEM_PROMPT = `You are Melos, an expert AI guide helping young music artists navigate the music industry. You are specifically an expert on music distributors, streaming platforms, royalties, copyright, and artist development.
 
 Always be:
 - Helpful and encouraging
@@ -11,13 +12,17 @@ Always be:
 - Honest about pros and cons
 - Supportive of young artists' dreams
 
-Keep responses conversational and friendly. Don't use emojis. If asked about something outside your expertise, politely redirect to music industry topics.`;
+Keep responses conversational and friendly. Don't use emojis.
+
+If the user's message contains a [MIDI FILE ANALYSIS] or [LIVE MIDI INPUT] block, prioritize musical interpretation of that MIDI data even if it is outside music-industry career topics. In that case, do not redirect away from the MIDI analysis.`;
+
+const MELOS_SYSTEM_PROMPT = `${BASE_MELOS_SYSTEM_PROMPT}\n\n${getMidiSystemPromptAddition()}`;
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    const { message } = await request.json();
+    const { message, conversationHistory } = await request.json();
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -32,8 +37,10 @@ export async function POST(request: NextRequest) {
                'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
+    const hasMidiBlock = message.includes('[MIDI FILE ANALYSIS]') || message.includes('[LIVE MIDI INPUT]');
+
     // 🎯 STEP 1: Check FAQ Cache First (saves neurons!)
-    const faqResponse = searchFAQCache(message);
+    const faqResponse = hasMidiBlock ? null : searchFAQCache(message);
     if (faqResponse) {
       const responseTime = Date.now() - startTime;
       
@@ -64,12 +71,24 @@ export async function POST(request: NextRequest) {
     }
 
     // ✅ STEP 2: RETRIEVE - Search knowledge base for relevant data
-    const retrievedData = searchMusicData(message);
+    const retrievedData = hasMidiBlock ? null : searchMusicData(message);
 
     // ✅ STEP 3: AUGMENT - Add retrieved data to system prompt
     const augmentedSystemPrompt = retrievedData
       ? `${MELOS_SYSTEM_PROMPT}\n\nRELEVANT INFORMATION FROM KNOWLEDGE BASE:\n${retrievedData}`
       : MELOS_SYSTEM_PROMPT;
+
+    const historyMessages = Array.isArray(conversationHistory)
+      ? conversationHistory
+          .filter((entry: { role?: string; text?: string }) =>
+            entry && (entry.role === 'user' || entry.role === 'bot') && typeof entry.text === 'string'
+          )
+          .slice(-12)
+          .map((entry: { role: 'user' | 'bot'; text: string }) => ({
+            role: entry.role === 'bot' ? 'assistant' : 'user',
+            content: entry.text,
+          }))
+      : [];
 
     // ✅ STEP 4: GENERATE - Call AI with augmented context
     const response = await fetch(
@@ -83,6 +102,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           messages: [
             { role: 'system', content: augmentedSystemPrompt },
+            ...historyMessages,
             { role: 'user', content: message },
           ],
           max_tokens: 512,
