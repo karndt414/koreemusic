@@ -18,6 +18,69 @@ If the user's message contains a [MIDI FILE ANALYSIS] or [LIVE MIDI INPUT] block
 
 const MELOS_SYSTEM_PROMPT = `${BASE_MELOS_SYSTEM_PROMPT}\n\n${getMidiSystemPromptAddition()}`;
 
+const PRIMARY_MODEL = process.env.CLOUDFLARE_AI_PRIMARY_MODEL || '@cf/meta/llama-3.1-8b-instruct';
+const FALLBACK_MODEL = process.env.CLOUDFLARE_AI_FALLBACK_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const RETRY_DELAYS_MS = [300, 800, 1500];
+
+type AIResult = {
+  reply: string;
+  model: string;
+};
+
+function isRateLimitStatus(status: number) {
+  return status === 429;
+}
+
+function isRetryableStatus(status: number) {
+  return status >= 500 || isRateLimitStatus(status);
+}
+
+async function callWorkersAI(
+  model: string,
+  accountId: string,
+  apiToken: string,
+  body: object
+): Promise<AIResult> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
+    const response = await fetch(
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const message = `API error (${model}): ${JSON.stringify(errorData)}`;
+      lastError = new Error(message);
+
+      if (isRetryableStatus(response.status) && attempt < RETRY_DELAYS_MS.length) {
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt]));
+        continue;
+      }
+      throw lastError;
+    }
+
+    const data = await response.json();
+    const reply = data.result?.response;
+
+    if (!reply) {
+      throw new Error(`Empty response from Cloudflare Workers AI (${model})`);
+    }
+
+    return { reply, model };
+  }
+
+  throw lastError || new Error('Unknown AI error');
+}
+
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
@@ -38,6 +101,7 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
     const hasMidiBlock = message.includes('[MIDI FILE ANALYSIS]') || message.includes('[LIVE MIDI INPUT]');
+    const isComplexRequest = hasMidiBlock || message.length > 800;
 
     // 🎯 STEP 1: Check FAQ Cache First (saves neurons!)
     const faqResponse = hasMidiBlock ? null : searchFAQCache(message);
@@ -91,37 +155,28 @@ export async function POST(request: NextRequest) {
       : [];
 
     // ✅ STEP 4: GENERATE - Call AI with augmented context
-    const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: [
-            { role: 'system', content: augmentedSystemPrompt },
-            ...historyMessages,
-            { role: 'user', content: message },
-          ],
-          max_tokens: 512,
-          temperature: 0.6,
-        }),
+    const body = {
+      messages: [
+        { role: 'system', content: augmentedSystemPrompt },
+        ...historyMessages,
+        { role: 'user', content: message },
+      ],
+      max_tokens: 512,
+      temperature: 0.6,
+    };
+
+    let aiResult: AIResult;
+    try {
+      aiResult = await callWorkersAI(PRIMARY_MODEL, accountId, apiToken, body);
+    } catch (primaryError) {
+      if (!isComplexRequest || PRIMARY_MODEL === FALLBACK_MODEL) {
+        throw primaryError;
       }
-    );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`API error: ${JSON.stringify(errorData)}`);
+      aiResult = await callWorkersAI(FALLBACK_MODEL, accountId, apiToken, body);
     }
 
-    const data = await response.json();
-    const reply = data.result?.response;
-
-    if (!reply) {
-      throw new Error('Empty response from Cloudflare Workers AI');
-    }
+    const reply = aiResult.reply;
 
     const responseTime = Date.now() - startTime;
     const tokensUsed = Math.ceil(message.length / 4) + Math.ceil(reply.length / 4); // Rough estimate
@@ -143,9 +198,13 @@ export async function POST(request: NextRequest) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('Melos API error:', errorMessage);
 
+    const friendlyMessage = errorMessage.includes('429')
+      ? 'Rate limit hit. Please try again in a minute.'
+      : `Failed to get response from Melos: ${errorMessage}`;
+
     return NextResponse.json(
       {
-        error: 'Failed to get response from Melos: ' + errorMessage,
+        error: friendlyMessage,
       },
       { status: 500 }
     );
