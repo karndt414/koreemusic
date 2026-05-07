@@ -61,6 +61,10 @@ export function connectToMidiInput(portId: string) {
       bufferStartTime = performance.now();
     }
 
+    if (!event.data || event.data.length < 3) {
+      return;
+    }
+
     const [status, data1, data2] = event.data;
     const type = status & 0xf0;
     const channel = (status & 0x0f) + 1;
