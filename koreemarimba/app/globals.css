@@ -45,8 +45,6 @@ body {
   max-width: 100px;
   margin-bottom: 10px;
   border: 2px solid #fff;
-  display: block;
-  object-fit: contain;
 }
 
 /* --- NAVIGATION (HTML LIST) --- */
@@ -1287,11 +1285,18 @@ footer a {
     justify-content: center;
     margin: 0 auto 1rem;
     pointer-events: auto;
-    width: 150px;
+    width: 176px;
+    aspect-ratio: 1 / 1;
+    padding: 12px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 14px 30px rgba(10, 17, 40, 0.22);
   }
 
   .melos-hero-logo {
-    border-radius: 20px;
+    border-radius: 22px;
+    border: 1px solid rgba(10, 17, 40, 0.08);
+    box-shadow: 0 8px 18px rgba(10, 17, 40, 0.2);
   }
 
   .melos-hero-content h1 {
