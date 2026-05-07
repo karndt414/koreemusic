@@ -1263,23 +1263,21 @@ footer a {
   }
 
   .melos-hero-content {
-    padding: 1.35rem;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
   }
 
   .melos-hero-brand {
     position: static;
     transform: none;
-    justify-content: flex-end;
-    margin-bottom: 0.85rem;
+    justify-content: center;
+    margin: 0 auto 1rem;
     pointer-events: auto;
+    width: 150px;
   }
 
   .melos-hero-logo {
     border-radius: 20px;
-  }
-
-  .melos-hero-brand {
-    width: 110px;
   }
 
   .melos-hero-content h1 {
@@ -1307,12 +1305,13 @@ footer a {
     flex-direction: column;
   }
 
-  .melos-midi-drawer {
-    width: min(320px, 92vw);
+  .melos-midi-drawer,
+  .melos-chat-toolbar {
+    display: none;
   }
 
-  .melos-chat-toolbar {
-    padding: 1rem 1rem 0;
+  .melos-page.midi-open {
+    padding-left: 0;
   }
 
   .melos-resources-sidebar {
