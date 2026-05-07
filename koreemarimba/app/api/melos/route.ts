@@ -82,6 +82,26 @@ async function callMistral(
   throw lastError || new Error('Unknown AI error');
 }
 
+function buildRateLimitFallbackReply(retrievedData: string | null) {
+  const hasRetrievedData = Boolean(retrievedData && retrievedData.trim().length > 0);
+  const fallbackLead = hasRetrievedData
+    ? 'I’m rate-limited right now, so I’m answering from the knowledge base only.'
+    : 'I’m rate-limited right now, and I do not have a cached answer for that question yet.';
+
+  if (!hasRetrievedData) {
+    return `${fallbackLead} Please try again in a minute, or rephrase the question so I can match it to a cached answer.`;
+  }
+
+  return [
+    fallbackLead,
+    '',
+    'Retrieved knowledge base summary:',
+    retrievedData,
+    '',
+    'If you want, resend the question in a simpler form and I’ll try again once the rate limit clears.',
+  ].join('\n');
+}
+
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
@@ -165,7 +185,39 @@ export async function POST(request: NextRequest) {
       temperature: 0.6,
     };
 
-    const aiResult = await callMistral(PRIMARY_MODEL, apiToken, body);
+    let aiResult: AIResult;
+    try {
+      aiResult = await callMistral(PRIMARY_MODEL, apiToken, body);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const isRateLimited = errorMessage.includes('429');
+
+      if (!isRateLimited) {
+        throw error;
+      }
+
+      const fallbackReply = buildRateLimitFallbackReply(retrievedData);
+
+      const responseTime = Date.now() - startTime;
+      const tokensUsed = Math.ceil(message.length / 4) + Math.ceil(fallbackReply.length / 4);
+
+      const { error: fallbackLogError } = await supabase.from('melos_prompts').insert({
+        user_message: message,
+        ai_response: fallbackReply,
+        from_faq_cache: false,
+        tokens_used: tokensUsed,
+        response_time_ms: responseTime,
+        ip_address: ip,
+        user_agent: userAgent,
+      });
+      if (fallbackLogError) console.error('Supabase log error:', fallbackLogError);
+
+      return NextResponse.json({
+        reply: fallbackReply,
+        cached: true,
+        fallback: 'rate_limited',
+      });
+    }
 
     const reply = aiResult.reply;
 

@@ -45,6 +45,8 @@ body {
   max-width: 100px;
   margin-bottom: 10px;
   border: 2px solid #fff;
+  display: block;
+  object-fit: contain;
 }
 
 /* --- NAVIGATION (HTML LIST) --- */
@@ -253,6 +255,18 @@ footer a {
 
 /* --- MOBILE ADJUSTMENTS --- */
 @media (max-width: 600px) {
+  .main-logo {
+    width: min(72vw, 220px);
+    max-width: 220px;
+    margin: 0 auto 14px;
+    padding: 12px 16px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.08));
+  }
+
   #cloud-overlay {
     overflow-x: hidden;
   }
