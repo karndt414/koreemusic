@@ -1,9 +1,10 @@
 // Integrates with: app/melos/page.tsx, app/midi/MidiPanel.tsx
 
+import { computeCoherence } from './midiCoherence';
 import { getInstrumentName } from './midiInstrumentMap';
 import type { LiveMidiEvent, MidiLiveSummary } from './types';
 
-const BUFFER_MAX_EVENTS = 64;
+const BUFFER_MAX_EVENTS = 256;
 const BUFFER_MAX_SECONDS = 30;
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -170,6 +171,31 @@ export function getLiveMidiSnapshot(): MidiLiveSummary {
     return event;
   });
 
+  const noteEvents = eventBuffer.filter(
+    (event) => event.type === 'noteOn' && typeof event.midiNumber === 'number'
+  );
+  const coherenceEvents = (() => {
+    if (melodyChannel) {
+      return noteEvents.filter((event) => event.channel === melodyChannel);
+    }
+
+    if (noteEvents.length < 8) {
+      return noteEvents;
+    }
+
+    const sortedByPitch = [...noteEvents].sort(
+      (a, b) => (b.midiNumber ?? 0) - (a.midiNumber ?? 0)
+    );
+    const keepCount = Math.max(Math.floor(sortedByPitch.length * 0.3), 1);
+    return sortedByPitch.slice(0, keepCount);
+  })();
+  const coherence = computeCoherence(
+    coherenceEvents.map((event) => ({
+      midi: event.midiNumber ?? 0,
+      time: event.timeMs / 1000,
+    }))
+  );
+
   return {
     source: 'midi_live',
     portName: activeInput?.name || 'unknown',
@@ -178,6 +204,8 @@ export function getLiveMidiSnapshot(): MidiLiveSummary {
     events,
     activeInstruments,
     melodyChannel,
+    coherenceScore: coherence.score,
+    coherenceLabel: coherence.label,
   };
 }
 

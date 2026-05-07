@@ -33,6 +33,9 @@ export function formatMidiContextForAI(midiSummary: MidiSummary | null) {
       ? '\nNote data: File is large. A representative sample of notes was sent to stay within context limits.'
       : '';
 
+    const coherenceLabel = summary.melodyCoherenceLabel ?? summary.coherenceLabel;
+    const coherenceScore = summary.melodyCoherenceScore ?? summary.coherenceScore;
+
     return `
 [MIDI FILE ANALYSIS]
 File: ${summary.fileName}
@@ -40,6 +43,9 @@ Duration: ${summary.durationSeconds}s | BPM: ${summary.bpm} | Time Signature: ${
 Tracks (${summary.trackCount} total):
 ${trackSummaries}${emptyNote}${largeNote}
 Melody track guess: ${summary.melodyTrackIndex !== null ? `Track ${summary.melodyTrackIndex + 1}` : 'unknown'}
+  Coherence: ${coherenceLabel} (${Math.round(coherenceScore * 100)}%)
+  Melody coherence: ${summary.melodyCoherenceLabel ?? 'unknown'}${summary.melodyCoherenceScore !== null ? ` (${Math.round(summary.melodyCoherenceScore * 100)}%)` : ''}
+  ${coherenceLabel === 'noisy' ? 'Note: The playing is flagged as random/noisy. Call this out clearly.' : ''}
 * indicates melody notes in the inferred melody track.
 [END MIDI FILE ANALYSIS]
 `.trim();
@@ -56,12 +62,15 @@ Melody track guess: ${summary.melodyTrackIndex !== null ? `Track ${summary.melod
         `${event.note}${event.isMelody ? '*' : ''}@${event.timeMs}ms(vel:${event.velocity})`
       )
       .join(', ');
+    const coherenceLabel = summary.coherenceLabel;
 
     return `
 [LIVE MIDI INPUT - Last ${summary.captureWindowSeconds}s from "${summary.portName}"]
 Events captured: ${summary.eventCount} | Note-ons: ${noteOns.length}
 Active instruments: ${instrumentSummary || 'unknown'}
 Melody channel guess: ${summary.melodyChannel ?? 'unknown'}
+Coherence: ${coherenceLabel} (${Math.round(summary.coherenceScore * 100)}%)
+${coherenceLabel === 'noisy' ? 'Note: The playing is flagged as random/noisy. Call this out clearly.' : ''}
 Notes played: ${noteList || 'none'}
 * indicates melody notes in the inferred melody channel.
 [END LIVE MIDI INPUT]

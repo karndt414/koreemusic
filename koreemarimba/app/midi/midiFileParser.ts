@@ -2,6 +2,7 @@
 // Depends on: @tonejs/midi
 
 import { Midi } from '@tonejs/midi';
+import { computeCoherence } from './midiCoherence';
 import { getInstrumentName } from './midiInstrumentMap';
 import type { MidiFileSummary, MidiTrackSummary } from './types';
 
@@ -85,6 +86,7 @@ export async function parseMidiFile(file: File): Promise<MidiFileSummary> {
   const midi = new Midi(arrayBuffer);
 
   const trackStats: TrackStats[] = [];
+  const allNotesForCoherence: Array<{ midi: number; time: number }> = [];
 
   const tracks: MidiTrackSummary[] = midi.tracks.map((track, index) => {
     const truncated = track.notes.length > MAX_NOTES_PER_TRACK;
@@ -100,6 +102,13 @@ export async function parseMidiFile(file: File): Promise<MidiFileSummary> {
       duration: Number(note.duration.toFixed(3)),
       velocity: note.velocity,
     }));
+
+    noteSlice.forEach((note) => {
+      allNotesForCoherence.push({
+        midi: note.midi,
+        time: note.time,
+      });
+    });
 
     const instrumentProgram =
       typeof track.instrument?.number === 'number' ? track.instrument.number : null;
@@ -146,6 +155,9 @@ export async function parseMidiFile(file: File): Promise<MidiFileSummary> {
     });
   }
 
+  let melodyCoherenceScore: number | null = null;
+  let melodyCoherenceLabel: MidiFileSummary['melodyCoherenceLabel'] = null;
+
   if (melodyTrackIndex !== null) {
     const medianPitch = trackStats[melodyTrackIndex]?.medianPitch ?? 0;
     tracks[melodyTrackIndex] = {
@@ -156,7 +168,17 @@ export async function parseMidiFile(file: File): Promise<MidiFileSummary> {
         isMelody: note.midi >= medianPitch,
       })),
     };
+
+    const melodyNotes = tracks[melodyTrackIndex].notes.map((note) => ({
+      midi: note.midi,
+      time: note.time,
+    }));
+    const melodyCoherence = computeCoherence(melodyNotes);
+    melodyCoherenceScore = melodyCoherence.score;
+    melodyCoherenceLabel = melodyCoherence.label;
   }
+
+  const overallCoherence = computeCoherence(allNotesForCoherence);
 
   return {
     source: 'midi_file',
@@ -173,6 +195,10 @@ export async function parseMidiFile(file: File): Promise<MidiFileSummary> {
     isLargeFile: totalNoteCount >= LARGE_FILE_NOTE_THRESHOLD,
     truncated,
     melodyTrackIndex,
+    coherenceScore: overallCoherence.score,
+    coherenceLabel: overallCoherence.label,
+    melodyCoherenceScore,
+    melodyCoherenceLabel,
     tracks,
   };
 }

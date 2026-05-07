@@ -35,6 +35,10 @@ export type MidiFileSummary = {
   isLargeFile: boolean;
   truncated: boolean;
   melodyTrackIndex: number | null;
+  coherenceScore: number;
+  coherenceLabel: 'coherent' | 'ambiguous' | 'noisy';
+  melodyCoherenceScore: number | null;
+  melodyCoherenceLabel: 'coherent' | 'ambiguous' | 'noisy' | null;
   tracks: MidiTrackSummary[];
 };
 
@@ -60,6 +64,8 @@ export type MidiLiveSummary = {
   events: LiveMidiEvent[];
   activeInstruments: { channel: number; program: number; name: string }[];
   melodyChannel: number | null;
+  coherenceScore: number;
+  coherenceLabel: 'coherent' | 'ambiguous' | 'noisy';
 };
 
 export type MidiSummary = MidiFileSummary | MidiLiveSummary;
