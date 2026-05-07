@@ -8,15 +8,19 @@ export type MidiNoteSummary = {
   time: number;
   duration: number;
   velocity: number;
+  isMelody?: boolean;
 };
 
 export type MidiTrackSummary = {
   trackIndex: number;
   name: string;
   channel: number | null;
+  instrumentProgram: number | null;
+  instrumentName: string | null;
   noteCount: number;
   notes: MidiNoteSummary[];
   truncated: boolean;
+  isMelody?: boolean;
 };
 
 export type MidiFileSummary = {
@@ -30,18 +34,22 @@ export type MidiFileSummary = {
   isEmpty: boolean;
   isLargeFile: boolean;
   truncated: boolean;
+  melodyTrackIndex: number | null;
   tracks: MidiTrackSummary[];
 };
 
 export type LiveMidiEvent = {
-  type: 'noteOn' | 'noteOff' | 'controlChange';
+  type: 'noteOn' | 'noteOff' | 'controlChange' | 'programChange';
   note?: string;
   midiNumber?: number;
   velocity?: number;
   controller?: number;
   value?: number;
+  program?: number;
+  instrumentName?: string | null;
   channel: number;
   timeMs: number;
+  isMelody?: boolean;
 };
 
 export type MidiLiveSummary = {
@@ -50,6 +58,8 @@ export type MidiLiveSummary = {
   eventCount: number;
   captureWindowSeconds: number;
   events: LiveMidiEvent[];
+  activeInstruments: { channel: number; program: number; name: string }[];
+  melodyChannel: number | null;
 };
 
 export type MidiSummary = MidiFileSummary | MidiLiveSummary;

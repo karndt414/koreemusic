@@ -1,5 +1,6 @@
 // Integrates with: app/melos/page.tsx, app/midi/MidiPanel.tsx
 
+import { getInstrumentName } from './midiInstrumentMap';
 import type { LiveMidiEvent, MidiLiveSummary } from './types';
 
 const BUFFER_MAX_EVENTS = 64;
@@ -10,6 +11,7 @@ let midiAccess: MIDIAccess | null = null;
 let activeInput: MIDIInput | null = null;
 let eventBuffer: LiveMidiEvent[] = [];
 let bufferStartTime: number | null = null;
+let channelPrograms = new Map<number, number>();
 
 function midiNoteToName(midiNumber: number) {
   const octave = Math.floor(midiNumber / 12) - 1;
@@ -55,17 +57,18 @@ export function connectToMidiInput(portId: string) {
 
   eventBuffer = [];
   bufferStartTime = performance.now();
+  channelPrograms = new Map();
 
   activeInput.onmidimessage = (event) => {
     if (!bufferStartTime) {
       bufferStartTime = performance.now();
     }
 
-    if (!event.data || event.data.length < 3) {
+    if (!event.data || event.data.length < 2) {
       return;
     }
 
-    const [status, data1, data2] = event.data;
+    const [status, data1, data2 = 0] = event.data;
     const type = status & 0xf0;
     const channel = (status & 0x0f) + 1;
     const timeMs = Number((performance.now() - bufferStartTime).toFixed(1));
@@ -95,6 +98,15 @@ export function connectToMidiInput(portId: string) {
         channel,
         timeMs,
       });
+    } else if (type === 0xc0) {
+      channelPrograms.set(channel, data1);
+      eventBuffer.push({
+        type: 'programChange',
+        program: data1,
+        instrumentName: getInstrumentName(data1),
+        channel,
+        timeMs,
+      });
     }
 
     const cutoffMs = (performance.now() - bufferStartTime) - BUFFER_MAX_SECONDS * 1000;
@@ -105,6 +117,7 @@ export function connectToMidiInput(portId: string) {
     if (event.port?.id === portId && event.port.state === 'disconnected') {
       activeInput = null;
       eventBuffer = [];
+      channelPrograms = new Map();
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('midiDisconnected', { detail: { portId } }));
       }
@@ -112,13 +125,59 @@ export function connectToMidiInput(portId: string) {
   };
 }
 
+function getMelodyChannel(events: LiveMidiEvent[]) {
+  const noteEvents = events.filter((event) => event.type === 'noteOn' && event.midiNumber);
+  if (noteEvents.length === 0) return null;
+
+  const channelStats = new Map<number, { count: number; totalPitch: number }>();
+  noteEvents.forEach((event) => {
+    const entry = channelStats.get(event.channel) || { count: 0, totalPitch: 0 };
+    entry.count += 1;
+    entry.totalPitch += event.midiNumber ?? 0;
+    channelStats.set(event.channel, entry);
+  });
+
+  let bestChannel: number | null = null;
+  let bestScore = -Infinity;
+  channelStats.forEach((stats, channel) => {
+    const avgPitch = stats.totalPitch / stats.count;
+    const pitchScore = avgPitch / 127;
+    const countScore = Math.min(stats.count / 12, 1) * 0.2;
+    const score = pitchScore + countScore;
+    if (score > bestScore) {
+      bestScore = score;
+      bestChannel = channel;
+    }
+  });
+
+  return bestChannel;
+}
+
 export function getLiveMidiSnapshot(): MidiLiveSummary {
+  const melodyChannel = getMelodyChannel(eventBuffer);
+  const activeInstruments = [...channelPrograms.entries()]
+    .map(([channel, program]) => ({
+      channel,
+      program,
+      name: getInstrumentName(program) || `Program ${program}`,
+    }))
+    .sort((a, b) => a.channel - b.channel);
+
+  const events = eventBuffer.map((event) => {
+    if (melodyChannel && event.channel === melodyChannel && event.type.startsWith('note')) {
+      return { ...event, isMelody: true };
+    }
+    return event;
+  });
+
   return {
     source: 'midi_live',
     portName: activeInput?.name || 'unknown',
     eventCount: eventBuffer.length,
     captureWindowSeconds: BUFFER_MAX_SECONDS,
-    events: [...eventBuffer],
+    events,
+    activeInstruments,
+    melodyChannel,
   };
 }
 
@@ -132,4 +191,5 @@ export function disconnectMidi() {
   }
   eventBuffer = [];
   bufferStartTime = null;
+  channelPrograms = new Map();
 }

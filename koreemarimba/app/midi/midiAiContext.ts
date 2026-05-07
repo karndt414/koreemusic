@@ -12,12 +12,16 @@ export function formatMidiContextForAI(midiSummary: MidiSummary | null) {
         const noteList = track.notes
           .map(
             (note) =>
-              `${note.name}(vel:${Math.round(note.velocity * 127)},dur:${note.duration}s)`
+              `${note.name}${note.isMelody ? '*' : ''}(vel:${Math.round(
+                note.velocity * 127
+              )},dur:${note.duration}s)`
           )
           .join(', ');
 
         const truncationNote = track.truncated ? ' [truncated to 200]' : '';
-        return `  Track "${track.name}" (ch${track.channel ?? 'n/a'}): ${track.noteCount} notes${truncationNote}.\n  Notes: ${noteList}`;
+        const instrumentNote = track.instrumentName ? ` | inst: ${track.instrumentName}` : '';
+        const roleNote = track.isMelody ? ' | role: melody' : ' | role: accompaniment';
+        return `  Track "${track.name}" (ch${track.channel ?? 'n/a'}${instrumentNote}${roleNote}): ${track.noteCount} notes${truncationNote}.\n  Notes: ${noteList}`;
       })
       .join('\n');
 
@@ -35,6 +39,8 @@ File: ${summary.fileName}
 Duration: ${summary.durationSeconds}s | BPM: ${summary.bpm} | Time Signature: ${summary.timeSignature}
 Tracks (${summary.trackCount} total):
 ${trackSummaries}${emptyNote}${largeNote}
+Melody track guess: ${summary.melodyTrackIndex !== null ? `Track ${summary.melodyTrackIndex + 1}` : 'unknown'}
+* indicates melody notes in the inferred melody track.
 [END MIDI FILE ANALYSIS]
 `.trim();
   }
@@ -42,14 +48,22 @@ ${trackSummaries}${emptyNote}${largeNote}
   if (midiSummary.source === 'midi_live') {
     const summary = midiSummary as MidiLiveSummary;
     const noteOns = summary.events.filter((event) => event.type === 'noteOn');
+    const instrumentSummary = summary.activeInstruments
+      .map((instrument) => `ch${instrument.channel}: ${instrument.name}`)
+      .join(', ');
     const noteList = noteOns
-      .map((event) => `${event.note}@${event.timeMs}ms(vel:${event.velocity})`)
+      .map((event) =>
+        `${event.note}${event.isMelody ? '*' : ''}@${event.timeMs}ms(vel:${event.velocity})`
+      )
       .join(', ');
 
     return `
 [LIVE MIDI INPUT - Last ${summary.captureWindowSeconds}s from "${summary.portName}"]
 Events captured: ${summary.eventCount} | Note-ons: ${noteOns.length}
+Active instruments: ${instrumentSummary || 'unknown'}
+Melody channel guess: ${summary.melodyChannel ?? 'unknown'}
 Notes played: ${noteList || 'none'}
+* indicates melody notes in the inferred melody channel.
 [END LIVE MIDI INPUT]
 `.trim();
   }

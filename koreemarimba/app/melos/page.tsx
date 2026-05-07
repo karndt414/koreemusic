@@ -181,13 +181,17 @@ export default function MelosPage() {
             />
           </div>
           <p className="melos-kicker">The intelligent co-composer designed to amplify your artistry.</p>
-          <h1>Turning your melody into your masterpiece.</h1>
+          <h1>You bring the melody, we have the rest.</h1>
           <p className="melos-tagline">For composers on tight turnarounds, Melos AI helps you evolve sketches into expressive, deadline-ready music without surrendering creative control.</p>
           <a href="#melos-chat" className="melos-hero-cta">Start Co-Composing</a>
         </div>
       </div>
 
       <div className="melos-wrapper" id="melos-chat">
+        <aside className="melos-midi-sidebar">
+          <MidiPanel onMidiReady={attachMidiContext} />
+        </aside>
+
         <div className="melos-chat-container">
           <div className="melos-messages">
             {messages.map((message, index) => (
@@ -305,8 +309,6 @@ export default function MelosPage() {
               </div>
             )}
           </div>
-
-          <MidiPanel onMidiReady={attachMidiContext} />
 
           <div className="melos-input-area">
             <input

@@ -682,8 +682,15 @@ footer a {
   margin: 1.5rem auto;
   padding: 0 1rem;
   display: flex;
-  gap: 0;
+  gap: 1.5rem;
   align-items: flex-start;
+}
+
+.melos-midi-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 1.5rem;
 }
 
 .melos-chat-container {
@@ -1223,6 +1230,11 @@ footer a {
 
   .melos-wrapper {
     flex-direction: column;
+  }
+
+  .melos-midi-sidebar {
+    width: 100%;
+    position: static;
   }
 
   .melos-resources-sidebar {
