@@ -18,8 +18,7 @@ If the user's message contains a [MIDI FILE ANALYSIS] or [LIVE MIDI INPUT] block
 
 const MELOS_SYSTEM_PROMPT = `${BASE_MELOS_SYSTEM_PROMPT}\n\n${getMidiSystemPromptAddition()}`;
 
-const PRIMARY_MODEL = process.env.CLOUDFLARE_AI_PRIMARY_MODEL || '@cf/meta/llama-3.1-8b-instruct';
-const FALLBACK_MODEL = process.env.CLOUDFLARE_AI_FALLBACK_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const PRIMARY_MODEL = process.env.MISTRAL_MODEL || 'mistral-small-latest';
 const RETRY_DELAYS_MS = [300, 800, 1500];
 
 type AIResult = {
@@ -35,9 +34,8 @@ function isRetryableStatus(status: number) {
   return status >= 500 || isRateLimitStatus(status);
 }
 
-async function callWorkersAI(
+async function callMistral(
   model: string,
-  accountId: string,
   apiToken: string,
   body: object
 ): Promise<AIResult> {
@@ -45,7 +43,7 @@ async function callWorkersAI(
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
     const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`,
+      'https://api.mistral.ai/v1/chat/completions',
       {
         method: 'POST',
         headers: {
@@ -69,10 +67,10 @@ async function callWorkersAI(
     }
 
     const data = await response.json();
-    const reply = data.result?.response;
+    const reply = data.choices?.[0]?.message?.content;
 
     if (!reply) {
-      throw new Error(`Empty response from Cloudflare Workers AI (${model})`);
+      throw new Error(`Empty response from Mistral (${model})`);
     }
 
     return { reply, model };
@@ -101,7 +99,6 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
     const hasMidiBlock = message.includes('[MIDI FILE ANALYSIS]') || message.includes('[LIVE MIDI INPUT]');
-    const isComplexRequest = hasMidiBlock || message.length > 800;
 
     // 🎯 STEP 1: Check FAQ Cache First (saves neurons!)
     const faqResponse = hasMidiBlock ? null : searchFAQCache(message);
@@ -124,10 +121,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ reply: faqResponse, cached: true });
     }
 
-    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-    if (!accountId || !apiToken) {
-      console.error('Cloudflare credentials not found in environment');
+    const apiToken = process.env.MISTRAL_API_KEY;
+    if (!apiToken) {
+      console.error('Mistral API key not found in environment');
       return NextResponse.json(
         { error: 'API not configured' },
         { status: 500 }
@@ -156,6 +152,7 @@ export async function POST(request: NextRequest) {
 
     // ✅ STEP 4: GENERATE - Call AI with augmented context
     const body = {
+      model: PRIMARY_MODEL,
       messages: [
         { role: 'system', content: augmentedSystemPrompt },
         ...historyMessages,
@@ -165,16 +162,7 @@ export async function POST(request: NextRequest) {
       temperature: 0.6,
     };
 
-    let aiResult: AIResult;
-    try {
-      aiResult = await callWorkersAI(PRIMARY_MODEL, accountId, apiToken, body);
-    } catch (primaryError) {
-      if (!isComplexRequest || PRIMARY_MODEL === FALLBACK_MODEL) {
-        throw primaryError;
-      }
-
-      aiResult = await callWorkersAI(FALLBACK_MODEL, accountId, apiToken, body);
-    }
+    const aiResult = await callMistral(PRIMARY_MODEL, apiToken, body);
 
     const reply = aiResult.reply;
 
