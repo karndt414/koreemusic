@@ -14,13 +14,19 @@ import {
 import type { MidiFileSummary, MidiSummary } from './types';
 
 type MidiPanelProps = {
-  onMidiReady: (summary: MidiSummary) => void;
+  onMidiSend: (summary: MidiSummary, message: string) => void;
+  defaultOpen?: boolean;
+  showToggle?: boolean;
 };
 
 type MidiTab = 'file' | 'live';
 
-export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function MidiPanel({
+  onMidiSend,
+  defaultOpen = false,
+  showToggle = true,
+}: MidiPanelProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [activeTab, setActiveTab] = useState<MidiTab>('file');
   const [status, setStatus] = useState('MIDI Ready');
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +38,7 @@ export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
   const [selectedPortId, setSelectedPortId] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [eventCount, setEventCount] = useState(0);
+  const [midiMessage, setMidiMessage] = useState('');
 
   const liveSupported = isWebMidiSupported();
 
@@ -110,7 +117,8 @@ export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
 
   const handleSendFile = () => {
     if (!fileSummary) return;
-    onMidiReady(fileSummary);
+    onMidiSend(fileSummary, midiMessage);
+    setMidiMessage('');
     setStatus('MIDI context attached.');
   };
 
@@ -153,19 +161,22 @@ export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
 
   const handleSendLive = () => {
     const snapshot = getLiveMidiSnapshot();
-    onMidiReady(snapshot);
+    onMidiSend(snapshot, midiMessage);
+    setMidiMessage('');
     setStatus('Live MIDI snapshot attached.');
   };
 
   return (
     <section className={`midi-panel ${isOpen ? 'open' : ''}`}>
-      <button
-        type="button"
-        className="midi-panel-toggle"
-        onClick={() => setIsOpen((prev) => !prev)}
-      >
-        🎹 MIDI
-      </button>
+      {showToggle && (
+        <button
+          type="button"
+          className="midi-panel-toggle"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          🎹 MIDI
+        </button>
+      )}
 
       {isOpen && (
         <div className="midi-panel-body">
@@ -224,6 +235,16 @@ export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
               >
                 Send to AI
               </button>
+
+              <label className="midi-message">
+                <span>Add message for Melos</span>
+                <input
+                  type="text"
+                  value={midiMessage}
+                  onChange={(event) => setMidiMessage(event.target.value)}
+                  placeholder="Ask about melody, harmony, feel, or arrangement..."
+                />
+              </label>
             </div>
           )}
 
@@ -270,6 +291,16 @@ export default function MidiPanel({ onMidiReady }: MidiPanelProps) {
                   >
                     Send Snapshot to AI
                   </button>
+
+                  <label className="midi-message">
+                    <span>Add message for Melos</span>
+                    <input
+                      type="text"
+                      value={midiMessage}
+                      onChange={(event) => setMidiMessage(event.target.value)}
+                      placeholder="Ask about melody, harmony, feel, or arrangement..."
+                    />
+                  </label>
                 </>
               )}
             </div>

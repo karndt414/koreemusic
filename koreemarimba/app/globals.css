@@ -572,6 +572,11 @@ footer a {
     radial-gradient(circle at 85% 8%, rgba(194, 89, 58, 0.2), transparent 34%),
     var(--melos-studio-sand);
   padding-bottom: 2rem;
+  transition: padding-left 0.35s ease;
+}
+
+.melos-page.midi-open {
+  padding-left: min(340px, 90vw);
 }
 
 .melos-hero {
@@ -686,11 +691,65 @@ footer a {
   align-items: flex-start;
 }
 
-.melos-midi-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 1.5rem;
+.melos-midi-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: min(340px, 90vw);
+  background: #f8f5ef;
+  border-right: 1px solid rgba(10, 17, 40, 0.16);
+  box-shadow: 10px 0 30px rgba(10, 17, 40, 0.2);
+  transform: translateX(-100%);
+  transition: transform 0.35s ease;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.25rem;
+  overflow-y: auto;
+}
+
+.melos-midi-drawer.open {
+  transform: translateX(0);
+}
+
+.melos-midi-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.melos-midi-drawer-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--melos-deep-indigo);
+}
+
+.melos-midi-close {
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--melos-ink);
+}
+
+
+.melos-chat-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 1.25rem 1.5rem 0;
+}
+
+.melos-midi-launch {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--melos-deep-indigo);
+  color: var(--melos-studio-sand);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(10, 17, 40, 0.2);
 }
 
 .melos-chat-container {
@@ -998,6 +1057,22 @@ footer a {
   cursor: not-allowed;
 }
 
+.midi-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--melos-ink);
+}
+
+.midi-message input {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid rgba(10, 17, 40, 0.18);
+  background: #fff;
+  font-size: 0.95rem;
+}
+
 .midi-preview {
   background: #f8f4ec;
   padding: 0.75rem 1rem;
@@ -1232,9 +1307,12 @@ footer a {
     flex-direction: column;
   }
 
-  .melos-midi-sidebar {
-    width: 100%;
-    position: static;
+  .melos-midi-drawer {
+    width: min(320px, 92vw);
+  }
+
+  .melos-chat-toolbar {
+    padding: 1rem 1rem 0;
   }
 
   .melos-resources-sidebar {

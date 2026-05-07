@@ -109,29 +109,18 @@ export default function MelosPage() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-  const [pendingMidiContext, setPendingMidiContext] = useState<MidiSummary | null>(null);
+  const [isMidiOpen, setIsMidiOpen] = useState(false);
   usePageVisitor('/melos');
 
-  const attachMidiContext = (midiSummary: MidiSummary) => {
-    setPendingMidiContext(midiSummary);
-  };
+  const sendMessageToMelos = async (userText: string, midiSummary?: MidiSummary) => {
+    if (!userText.trim() || loading) return;
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
-
-    const userMessage = { role: 'user' as const, text: input };
+    const userMessage = { role: 'user' as const, text: userText };
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
     setLoading(true);
 
-    const midiBlock = pendingMidiContext
-      ? formatMidiContextForAI(pendingMidiContext)
-      : '';
-    const messageToSend = pendingMidiContext
-      ? `${midiBlock}\n\n${input}`
-      : input;
-    setPendingMidiContext(null);
-
+    const midiBlock = midiSummary ? formatMidiContextForAI(midiSummary) : '';
+    const messageToSend = midiSummary ? `${midiBlock}\n\n${userText}` : userText;
     const conversationHistory = [...messages, { role: 'user' as const, text: messageToSend }];
 
     try {
@@ -166,8 +155,35 @@ export default function MelosPage() {
     }
   };
 
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    const messageText = input;
+    setInput('');
+    await sendMessageToMelos(messageText);
+  };
+
+  const handleMidiSend = (summary: MidiSummary, message: string) => {
+    const userText = message.trim() || 'Please analyze the attached MIDI.';
+    void sendMessageToMelos(userText, summary);
+  };
+
   return (
-    <div className="melos-page">
+    <div className={`melos-page ${isMidiOpen ? 'midi-open' : ''}`}>
+      <aside className={`melos-midi-drawer ${isMidiOpen ? 'open' : ''}`}>
+        <div className="melos-midi-drawer-header">
+          <h3>MIDI</h3>
+          <button
+            type="button"
+            className="melos-midi-close"
+            onClick={() => setIsMidiOpen(false)}
+            aria-label="Close MIDI sidebar"
+          >
+            ✕
+          </button>
+        </div>
+        <MidiPanel onMidiSend={handleMidiSend} defaultOpen showToggle={false} />
+      </aside>
+
       <div className="melos-hero">
         <div className="melos-hero-content">
           <div className="melos-hero-brand">
@@ -188,11 +204,16 @@ export default function MelosPage() {
       </div>
 
       <div className="melos-wrapper" id="melos-chat">
-        <aside className="melos-midi-sidebar">
-          <MidiPanel onMidiReady={attachMidiContext} />
-        </aside>
-
         <div className="melos-chat-container">
+          <div className="melos-chat-toolbar">
+            <button
+              type="button"
+              className="melos-midi-launch"
+              onClick={() => setIsMidiOpen(true)}
+            >
+              Open MIDI
+            </button>
+          </div>
           <div className="melos-messages">
             {messages.map((message, index) => (
               <div key={index} className={`melos-message melos-message-${message.role}`}>
