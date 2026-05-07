@@ -102,7 +102,7 @@ export function connectToMidiInput(portId: string) {
   };
 
   midiAccess.onstatechange = (event) => {
-    if (event.port.id === portId && event.port.state === 'disconnected') {
+    if (event.port?.id === portId && event.port.state === 'disconnected') {
       activeInput = null;
       eventBuffer = [];
       if (typeof window !== 'undefined') {
