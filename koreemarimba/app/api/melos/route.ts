@@ -14,12 +14,15 @@ Always be:
 
 Keep responses conversational and friendly. Don't use emojis.
 
+When relevant information is provided from the knowledge base, treat it as authoritative and prioritize it. Do not invent or guess numbers that are not present in the knowledge base. If data is missing, say you do not have verified figures for that point.
+
 If the user's message contains a [MIDI FILE ANALYSIS] or [LIVE MIDI INPUT] block, prioritize musical interpretation of that MIDI data even if it is outside music-industry career topics. In that case, do not redirect away from the MIDI analysis.`;
 
 const MELOS_SYSTEM_PROMPT = `${BASE_MELOS_SYSTEM_PROMPT}\n\n${getMidiSystemPromptAddition()}`;
 
 const PRIMARY_MODEL = process.env.MISTRAL_MODEL || 'mistral-small-latest';
 const RETRY_DELAYS_MS = [300, 800, 1500];
+const MAX_TOKENS = Number(process.env.MISTRAL_MAX_TOKENS || 900);
 
 type AIResult = {
   reply: string;
@@ -158,7 +161,7 @@ export async function POST(request: NextRequest) {
         ...historyMessages,
         { role: 'user', content: message },
       ],
-      max_tokens: 512,
+      max_tokens: MAX_TOKENS,
       temperature: 0.6,
     };
 
