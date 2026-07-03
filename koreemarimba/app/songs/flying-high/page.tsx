@@ -30,7 +30,18 @@ export default function FlyingHigh() {
         <h3>Song Details</h3>
         <p><strong>Instrument:</strong> Vibraphone</p>
         <p><strong>Difficulty:</strong> Intermediate</p>
-        <p><strong>Price:</strong> TBA</p>
+        <p><strong>Price:</strong> $11.99</p>
+        <hr />
+        <div className="song-sidebar-action">
+          <a
+            href="https://open.spotify.com/track/4lCUIVyhD9bCVxoYlTxzAc?si=8d2eae82796b4ad6"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button-secondary"
+          >
+            Listen on Spotify
+          </a>
+        </div>
         <hr />
         <p>
           Purchase options for Flying High are coming soon.

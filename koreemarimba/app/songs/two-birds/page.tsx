@@ -16,16 +16,27 @@ export default function TwoBirds() {
         </div>
 
         <p>
-          Details for &quot;Two Birds&quot; are coming soon. This page is ready for the final
-          program notes, instrumentation, difficulty, and purchase information.
+          &quot;Two Birds&quot; is a duet for two 4.3 octave marimbas and nightingale whistle.
+          More program notes and purchase details are coming soon.
         </p>
       </main>
 
       <aside className="sidebar song-sidebar">
         <h3>Song Details</h3>
-        <p><strong>Instrument:</strong> TBA</p>
-        <p><strong>Difficulty:</strong> TBA</p>
-        <p><strong>Price:</strong> TBA</p>
+        <p><strong>Instrument:</strong> Two 4.3 Octave Marimbas and Nightingale Whistle</p>
+        <p><strong>Difficulty:</strong> Intermediate/Advanced</p>
+        <p><strong>Price:</strong> $19.99</p>
+        <hr />
+        <div className="song-sidebar-action">
+          <a
+            href="https://open.spotify.com/track/0fuFOLr833pmQwrztGWsDw?si=ffa5e55040314978"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button-secondary"
+          >
+            Listen on Spotify
+          </a>
+        </div>
         <hr />
         <p>Purchase options for Two Birds are coming soon.</p>
         <hr />
