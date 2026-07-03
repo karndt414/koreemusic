@@ -367,6 +367,27 @@ footer a {
   text-align: center;
 }
 
+.about-photo {
+  float: left;
+  max-width: 200px;
+  margin: 0 20px 16px 0;
+  border-radius: 8px;
+}
+
+.achievements-section {
+  clear: both;
+  padding-top: 10px;
+}
+
+.achievements-list {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.achievements-list li {
+  margin: 0.3rem 0;
+}
+
 /* --- RESPONSIVE DESIGN (Desktop) --- */
 @media (min-width: 768px) {
   nav ul {

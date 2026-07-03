@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
 
         <footer>
-          &copy; 2026 Koree Arndt - All rights reserved.
+          &copy; 2026 Koree Arndt
         </footer>
       </body>
     </html>

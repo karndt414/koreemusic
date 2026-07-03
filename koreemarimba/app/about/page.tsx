@@ -9,11 +9,7 @@ export default function About() {
     <div className="container">
       <main className="main-content">
         <h1>About Me</h1>
-        <img
-          src="/images/Koree-tough.jpg"
-          alt="About Photo"
-          style={{ float: 'left', marginRight: '20px', maxWidth: '200px', borderRadius: '10px' }}
-        />
+        <img src="/images/Koree-tough.jpg" alt="About Photo" className="about-photo" />
 
         <p>Hey! My name is Koree Arndt. I&apos;m a rising high school senior passionate about music and performance.</p>
 
@@ -23,13 +19,15 @@ export default function About() {
 
         <p>Now, I live in Bentonville, Arkansas, where I continue to pursue my passion for music. I have again had the chance to perform at Grand National Finals with the show &quot;Sequ1nce&quot; in 2025. I&apos;ve also composed and released my very first original works while here at Bentonville!</p>
 
-        <h3>Achievements</h3>
-        <ul>
-          <li>ISSMA State Solos - Perfect Scores</li>
-          <li>All-State Orchestra (Indiana) - Sophomore Year</li>
-          <li>All-State Band (Arkansas) - Junior Year</li>
-          <li>WGI World Class Finalist 2024</li>
-        </ul>
+        <section className="achievements-section">
+          <h3>Achievements</h3>
+          <ul className="achievements-list">
+            <li>ISSMA State Solos - Perfect Scores</li>
+            <li>All-State Orchestra (Indiana) - Sophomore Year</li>
+            <li>All-State Band (Arkansas) - Junior Year</li>
+            <li>WGI World Class Finalist 2024</li>
+          </ul>
+        </section>
       </main>
     </div>
   );
