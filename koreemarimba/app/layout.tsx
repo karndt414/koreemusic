@@ -14,8 +14,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <img className="main-logo" src="/images/logo.png" alt="Logo" />
           <div className="title-row">
             <h1>Koree Arndt Music</h1>
-            <a href="https://www.youtube.com/@Koreearndt414/videos" target="_blank" rel="noopener noreferrer">
-              <img src="/images/youtube.png" alt="YouTube" style={{ width: '30px' }} />
+            <a className="youtube-link" href="https://www.youtube.com/@Koreearndt414/videos" target="_blank" rel="noopener noreferrer" aria-label="Koree Arndt on YouTube">
+              <img src="/images/youtube.png" alt="" />
             </a>
           </div>
         </header>
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
 
         <footer>
-          &copy; 2025 Koree Arndt - All rights reserved.
+          &copy; 2026 Koree Arndt - All rights reserved.
         </footer>
       </body>
     </html>

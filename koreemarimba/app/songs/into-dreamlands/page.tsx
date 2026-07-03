@@ -5,7 +5,11 @@ import { usePageVisitor } from '@/lib/usePageVistor';
 
 declare global {
   interface Window {
-    paypal?: any;
+    paypal?: {
+      HostedButtons?: (options: { hostedButtonId: string }) => {
+        render: (selector: string) => void;
+      };
+    };
   }
 }
 
@@ -46,15 +50,11 @@ export default function IntoDreamlands() {
 
   return (
     <div className="container">
-      <main className="main-content">
+      <main className="main-content song-detail">
         <h1>Into Dreamlands</h1>
 
-        <div style={{ textAlign: 'center' }}>
-          <img
-            src="/images/Into_Dreamlands.png"
-            alt="Into Dreamlands Album Cover"
-            style={{ maxWidth: '100%', borderRadius: '10px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', marginBottom: '20px' }}
-          />
+        <div className="song-detail-cover">
+          <img src="/images/Into_Dreamlands.png" alt="Into Dreamlands cover art" />
         </div>
 
         <p>&quot;Into Dreamlands&quot; is an ethereal and immersive piece that transports listeners into a vivid dreamscape. Through its haunting melodies and atmospheric textures, it captures the struggle and determination of fighting for your dreams and ambitions amid a surreal, otherworldly realm.</p>
@@ -62,17 +62,18 @@ export default function IntoDreamlands() {
         <p>It is geared towards high-intermediate to advanced players- expect to play with very wide intervals and explore many rapid double lateral techniques.</p>
       </main>
 
-      <aside className="sidebar">
+      <aside className="sidebar song-sidebar">
         <h3>Song Details</h3>
         <p><strong>Instrument:</strong> 5 Octave Marimba</p>
         <p><strong>Difficulty:</strong> Advanced</p>
+        <p><strong>Price:</strong> $14.99</p>
         <hr />
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <div className="song-sidebar-action">
           <a
             href="https://open.spotify.com/track/5Gs1WLNBjJvyjC5tPaK5PD?si=3067cf42933f474b"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ background: '#1DB954', color: '#fff', padding: '12px 24px', textDecoration: 'none', borderRadius: '25px', display: 'inline-block', fontWeight: 'bold', fontSize: '0.95rem' }}
+            className="button-secondary"
           >
             Listen on Spotify
           </a>

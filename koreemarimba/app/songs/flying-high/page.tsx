@@ -8,20 +8,11 @@ export default function FlyingHigh() {
 
   return (
     <div className="container">
-      <main className="main-content">
+      <main className="main-content song-detail">
         <h1>Flying High</h1>
 
-        <div style={{ textAlign: 'center' }}>
-          <img
-            src="/images/Flying_High.jpg"
-            alt="Flying High Album Cover"
-            style={{
-              maxWidth: '100%',
-              borderRadius: '10px',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-              marginBottom: '20px',
-            }}
-          />
+        <div className="song-detail-cover">
+          <img src="/images/Flying_High.jpg" alt="Flying High cover art" />
         </div>
 
         <p>
@@ -35,10 +26,11 @@ export default function FlyingHigh() {
         </p>
       </main>
 
-      <aside className="sidebar">
+      <aside className="sidebar song-sidebar">
         <h3>Song Details</h3>
         <p><strong>Instrument:</strong> Vibraphone</p>
         <p><strong>Difficulty:</strong> Intermediate</p>
+        <p><strong>Price:</strong> TBA</p>
         <hr />
         <p>
           Purchase options for Flying High are coming soon.

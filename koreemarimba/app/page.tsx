@@ -19,7 +19,7 @@ export default function Home() {
         </div>
         <div className="bio">
           <p>
-            Hi! I'm Koree Arndt. Welcome to my official site, where you can explore my music
+            Hi! I&apos;m Koree Arndt. Welcome to my official site, where you can explore my music
             and purchase{' '}
             <Link href="/purchase" className="bio-link">
               solos
@@ -32,15 +32,15 @@ export default function Home() {
       <aside className="sidebar">
         <h3>Latest Updates</h3>
         <div className="update-card">
-          <p><strong>New Release:</strong> Into Dreamlands is now available for purchase.</p>
+          <p><strong>Catalog Update:</strong> Two Birds and free fall have been added to the sheet music catalog.</p>
         </div>
         <hr />
         <div className="update-card">
-          <p>Check out my latest performance videos on YouTube!</p>
+          <p><strong>Available Now:</strong> Into Dreamlands is available for purchase.</p>
         </div>
         <hr />
         <div className="melos-promo">
-          <p><strong>🎵 Meet Melos AI</strong></p>
+          <p><strong>Meet Melos AI</strong></p>
           <p className="melos-promo-text">Your personal guide to the music industry. Get expert advice on music distributors, career strategies, and more!</p>
           <Link href="/melos" className="melos-cta-button">
             Chat with Melos AI
