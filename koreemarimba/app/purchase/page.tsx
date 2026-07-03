@@ -44,7 +44,7 @@ const songs = [
     instrument: '5 Octave Marimba',
     difficulty: 'Advanced',
     price: '$14.99',
-    note: 'Available now.',
+    note: 'Advanced solo for 5 octave marimba.',
     spotify: 'https://open.spotify.com/track/5Gs1WLNBjJvyjC5tPaK5PD?si=3067cf42933f474b',
   },
 ];
@@ -57,7 +57,7 @@ export default function Purchase() {
       <main className="main-content catalog-page">
         <div className="page-heading">
           <p className="eyebrow">Sheet Music Catalog</p>
-          <h1>Solos by Koree Arndt</h1>
+          <h1>Music by Koree Arndt</h1>
           <p>
             Purchase and preview original percussion solos. New works will be updated with
             full program notes, instrumentation, and pricing soon.

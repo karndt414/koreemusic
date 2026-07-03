@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
 
         <footer>
-          &copy; 2026 Koree Arndt
+          &copy; 2026 Koree Arndt - <a href="mailto:koree.marimba@gmail.com">koree.marimba@gmail.com</a>
         </footer>
       </body>
     </html>
